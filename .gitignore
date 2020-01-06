@@ -10,7 +10,7 @@ conf/test.py
 announcement/test.py
 submission/test.py
 options/test.py
-
+q
 *.py[cod]
 *.log
 *.xml
