@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('u_type', models.CharField(default='', max_length=20, verbose_name='用户权限')),
                 ('action_time', models.DateTimeField(auto_now_add=True, verbose_name='发生时间')),
                 ('api', models.CharField(default='', max_length=255, verbose_name='请求api')),
-                ('action', models.CharField(default='', max_length=5, verbose_name='动作')),
+                ('action', models.CharField(default='', max_length=7, verbose_name='动作')),
                 ('location', models.CharField(default='', max_length=100, verbose_name='页面')),
             ],
             options={
