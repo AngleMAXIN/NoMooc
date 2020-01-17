@@ -35,8 +35,33 @@ class ContestAnnouncementListAPI(APIView):
 
 class ContestListAPI(APIView):
     def get(self, request):
-
-        contests = Contest.objects.select_related("created_by").filter(
+        exclude = (
+            "password",
+            "visible",
+            "partner",
+            "s_number",
+            "p_number",
+            "languages",
+            "allowed_ip_ranges",
+            "last_update_time",
+            "has_problem_list",
+            "created_by__description",
+            "created_by__password",
+            "created_by__last_login",
+            "created_by__sex",
+            "created_by__username",
+            "created_by__user_id",
+            "created_by__phone",
+            "created_by__email",
+            "created_by__admin_type",
+            "created_by__is_disabled",
+            "created_by__is_login",
+            "created_by__is_auth",
+            "created_by__is_email_auth",
+            "created_by__session_keys",
+            "created_by__register_type",
+        )
+        contests = Contest.objects.defer(*exclude).select_related("created_by").filter(
             visible=True, is_contest=True).order_by("-create_time")
 
         keyword = request.GET.get("keyword")
