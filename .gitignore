@@ -25,7 +25,6 @@ https_locations.conf
 local_locations.conf
 local_nginx.conf
 supervisord_local.conf
-README.md
 
 celerybeat.pid
 celerybeat-schedule
