@@ -1,6 +1,5 @@
 from django.conf.urls import url
 
-from ..views.oj import ContestRankAPI
 from ..views.admin import (
     ContestAPI,
     ContestOfCreator,
@@ -10,6 +9,7 @@ from ..views.admin import (
     ContestIdListOfCreater,
     ContestRankDownloadAPI,
     ContestOfUsers)
+from ..views.oj import ContestRankAPI
 
 urlpatterns = [
     # 竞赛排名

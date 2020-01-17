@@ -103,8 +103,12 @@ class ContestSerializer(ContestAdminSerializer):
             "password",
             "visible",
             "partner",
+            "s_number",
+            "p_number",
+            "languages",
             "allowed_ip_ranges",
             "last_update_time",
+            "has_problem_list",
         )
 
 
@@ -122,6 +126,7 @@ class ContestOfUsersSerializer(serializers.Serializer):
 
 
 class ContestAnnouncementSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     content = serializers.CharField()
 
 

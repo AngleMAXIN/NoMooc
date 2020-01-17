@@ -19,7 +19,7 @@ from ..serializers import (
     ContestOfUsersSerializer,
     CreateContestAnnouncementSerializer,
     EditConetestSeriaizer,
-    ContestCreatorSerializer)
+    ContestCreatorSerializer, ContestAnnouncementSerializer)
 
 
 class ContestAPI(APIView):
@@ -178,10 +178,19 @@ class ContestAnnouncementAPI(APIView):
     def put(self, request):
         ann_id = request.data.get("ann_id")
         content = request.data.get("content")
-        rows = ContestAnnouncement.objects.filter(pk=ann_id).update(content=content, update_time=now())
-        if rows == 0:
-            return self.error("修改失败")
+        ContestAnnouncement.objects.filter(id=ann_id).update(content=content, update_time=now())
         return self.success()
+
+    def get(self, request):
+        contest_id = request.data.get("contest_id")
+        data = ContestAnnouncement.objects.filter(
+            contest_id=contest_id)
+
+        if not data.exists():
+            return self.error("公告不存在")
+        return self.success(
+            ContestAnnouncementSerializer(
+                data[0]).data)
 
 
 class ContestOfUsers(APIView):
@@ -224,11 +233,10 @@ class ContestOfUsers(APIView):
 
         if rows > 0:
             return self.success("删除成功")
-        return self.success("删除失败")
+        return self.error("删除失败")
 
 
 class ContestOfGradeAPI(APIView):
-    # @validate_serializer()
     def post(self, request):
         user_join_detail = request.data.get("user_join_detail")
         con_id = request.data.get("contest_id")
