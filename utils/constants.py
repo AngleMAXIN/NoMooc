@@ -47,6 +47,9 @@ class CacheKey:
     user_rank = "user:rank"
     submit_prefix = "submitRes"
     announcementsList = "announcementList"
+    public_pro_count = "public_pro_count"
+
+    options_last_test_sub_id = "options:options_last_test_sub_id"
 
 
 class Difficulty(Choices):

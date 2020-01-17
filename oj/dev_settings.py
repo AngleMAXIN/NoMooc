@@ -22,7 +22,7 @@ REDIS_CONF = {
 }
 
 RABBIT_MQ_CONF = {
-    "HOST": get_env("RABBIT_MQ_HOST", "172.20.0.6"),
+    "HOST": get_env("RABBIT_MQ_HOST", "172.20.0.2"),
     "USER": get_env("RABBIT_MQ_USER", "nomooc"),
     "PASSWORD": get_env("RABBIT_MQ_PASSWD", "nomooc^*"),
     "PORT": get_env("RABBIT_MQ_PORT", "5672")
