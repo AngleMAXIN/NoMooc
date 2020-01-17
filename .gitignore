@@ -2,15 +2,7 @@
 __pycache__/
 .idea/
 
-README.md
-account/test.py
-problem/test.py
-contest/test.py
-conf/test.py
-announcement/test.py
-submission/test.py
-options/test.py
-q
+
 *.py[cod]
 *.log
 *.xml
@@ -33,6 +25,7 @@ https_locations.conf
 local_locations.conf
 local_nginx.conf
 supervisord_local.conf
+README.md
 
 celerybeat.pid
 celerybeat-schedule
