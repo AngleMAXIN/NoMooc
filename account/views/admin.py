@@ -715,6 +715,6 @@ class UserGradeOne(APIView):
 
 class UserAdminOperationRecord(APIView):
     def get(self, request):
-        list_record = AdminOperationRecord.objects.all()
+        list_record = AdminOperationRecord.objects.all().order_by('-action_time')
         res = self.paginate_data(request, list_record, AdminOperationRecordSerializers)
         return self.success(data=res)
