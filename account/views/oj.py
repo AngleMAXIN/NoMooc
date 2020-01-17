@@ -27,9 +27,6 @@ from ..serializers import (
 from ..tasks import send_email_async, save_record_and_deal_repeat_login
 
 
-# from otpauth import OtpAuth
-
-
 class UserDoProblemStatus(APIView):
     def get(self, request):
         uid = request.session.get("_auth_user_id")
@@ -45,16 +42,19 @@ class UserDoProblemStatus(APIView):
         user_problems_status = dict()
 
         user_problems_status["accepted_number"] = data[1]
-        problems = data[0].get("problems")
+        problems = data[0].get("problems", [])
         have_do = len(problems) if problems else 0
 
         # 尝试过失败的题目数
         user_problems_status["try"] = have_do - \
             user_problems_status["accepted_number"]
 
-        pub_pro_count = Problem.objects.filter(
-            bank=1, visible=True).count()
-
+        public_pro_count = cache.get(CacheKey.public_pro_count)
+        pub_pro_count = 0
+        if not public_pro_count:
+            pub_pro_count = Problem.objects.filter(
+                bank=1, visible=True).count()
+            cache.set(CacheKey.public_pro_count, pub_pro_count, timeout=60*30)
         # 没有做的题目数
         user_problems_status["not_try"] = pub_pro_count - have_do
 
