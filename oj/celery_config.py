@@ -13,8 +13,9 @@ CELERY_IMPORTS = (
 )
 
 
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["msgpack"]
+CELERY_TASK_SERIALIZER = "msgpack"
+CELERY_TASK_SERIALIZER = 'msgpack'
 
 # 每个result的生命周期
 CELERY_TASK_RESULT_EXPIRES = 100
@@ -25,7 +26,11 @@ CELERY_ENABLE_UTC = True
 CELERYBEAT_SCHEDULE = {
     'daily_task_info_count': {
         'task': "oj.tasks.daily_info_count",
-        'schedule': crontab(minute=59, hour=23),
+        'schedule': crontab(minute=57, hour=23),
+    },
+    'daily_task_clean_submission':{
+        'task':'oj.tasks.clean_test_submission',
+        'schedule': crontab(minute=10, hour=18)
     }
 
 }

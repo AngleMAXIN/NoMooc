@@ -1,14 +1,19 @@
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
 import datetime
-from oj.celery import app
-from submission.models import Submission
-from contest.models import Contest
+
+from django.db.models import Max
+
 from account.models import UserRecord
-from problem.models import Problem
-from options.options import OptionKeys
-from options.models import SysOptions as SysOptionsModel
 from conf.models import DailyInfoStatus
+from contest.models import Contest
+from oj.celery import app
+from options.models import SysOptions as SysOptionsModel
+from options.options import OptionKeys
+from problem.models import Problem
+from submission.models import Submission, TestSubmission
+from utils.cache import cache
+from utils.constants import CacheKey
 
 
 @app.task
@@ -26,7 +31,7 @@ def daily_info_count():
     # 通过数量
     accept_count = submissions.filter(result=0).count()
     # 提交数量
-    sub_count = submissions.count()
+    sub_count = submissions.aggregate(Max("id")).get("id__max", 0)
 
     DailyInfoStatus.objects.create(sub_count=sub_count,
                                    con_count=con_count,
@@ -38,3 +43,18 @@ def daily_info_count():
     SysOptionsModel.objects.filter(
         key=OptionKeys.public_problem_number).update(
         value=pro_count)
+    info = f"collection data contest count:{con_count}," \
+           f"active count:{accept_count}, submission count:{sub_count}, accept count:{accept_count}"
+    print(info)
+
+
+@app.task
+def clean_test_submission():
+    last_test_sub_id = cache.get(CacheKey.options_last_test_sub_id)
+    curr_max_test_sub_id = 0
+    if not last_test_sub_id:
+        curr_max_test_sub_id = TestSubmission.objects.all().aggregate(Max("id"))
+        cache.set(CacheKey.options_last_test_sub_id, curr_max_test_sub_id, timeout=3600*36)
+
+    raws = TestSubmission.objects.filter(id__gt=curr_max_test_sub_id).update(info={}, statistic_info={}, code='')
+    print("clean up test submission statistic_info and info fields, count:", raws)

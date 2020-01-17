@@ -17,7 +17,7 @@ from judge.languages import languages, spj_languages
 from options.models import SysOptions as SysOptionsModel
 from options.options import SysOptions, OptionKeys
 from problem.models import Problem
-from submission.models import Submission
+from submission.models import Submission, TestSubmission
 from utils.api import APIView, CSRFExemptAPIView, validate_serializer
 from utils.cache import cache
 from utils.constants import CacheKey
@@ -228,9 +228,9 @@ class LanguagesAPI(APIView):
 class DailyInfoStatusAPI(APIView):
 
     def daily_data(self, fields, limit=7, start_time="", end_time=""):
-        values = values = DailyInfoStatus.objects.values(*fields)
+        values = DailyInfoStatus.objects.values(*fields)
         if start_time:
-            values = values.filter(create_time__gte=start_time,create_time__lt=end_time)
+            values = values.filter(create_time__gte=start_time, create_time__lt=end_time)
 
         count = values.count()
         result = dict(count=count)
@@ -334,6 +334,7 @@ class TotalDataAPI(APIView):
         total['users'] = User.objects.filter(is_auth=True).count()
         total['contest'] = Contest.objects.filter(is_contest=True).count()
         total['problems'] = Problem.objects.count()
+        total['test_submit'] = TestSubmission.objects.count()
 
         return total
 
