@@ -12,6 +12,7 @@ from ..views.admin import (
     AdminSelectProblemByIds,
     BulkDeleteProblemAPI,
     ProblemTagManagerAPI,
+    ProblemTagDeleteShip,
     FPSProblemImport)
 
 urlpatterns = [
@@ -46,5 +47,7 @@ urlpatterns = [
     url(r"^bulk-delete-problem/?$", BulkDeleteProblemAPI.as_view(), name="bulk_delete_problem_api"),
 
     url(r"^problem-tags/?$", ProblemTagManagerAPI.as_view(), name="problem_tag_list_api"),
+
+    url(r"delete-problem-tag-ship/?$", ProblemTagDeleteShip.as_view(), name="problem_tag_ship")
 
 ]

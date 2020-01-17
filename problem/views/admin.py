@@ -1110,3 +1110,20 @@ class ProblemTagManagerAPI(APIView):
         except Problem.DoesNotExist:
             return self.error("删除失败,Tag不存在")
         return self.success()
+
+
+class ProblemTagDeleteShip(APIView):
+    def delete(self, request):
+        pro_id = request.GET.get("pro_id")
+        tag_id = request.GET.get("tag_id")
+        try:
+            tag = ProblemTag.objects.get(pk=tag_id)
+        except ProblemTag.DoesNotExist:
+            return self.error("tag 不存在")
+
+        try:
+            pro = Problem.objects.only("id").get(pk=pro_id)
+        except Problem.DoesNotExist:
+            return self.error("试题不存在")
+        pro.tags.remove(tag)
+        return self.success()

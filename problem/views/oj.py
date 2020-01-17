@@ -96,7 +96,8 @@ class ProblemAPI(APIView):
 
             problem = problem[0]
             problem['is_accepted'] = 0
-            if Submission.objects.filter(problem_id=problem_id, user_id=request.session.get("_auth_user_id"),
+            if Submission.objects.filter(problem_id=problem_id,
+                                         user_id=user_login,
                                          result=JudgeStatus.ACCEPTED).exists():
                 problem['is_accepted'] = 1
             return self.success(problem)
@@ -124,9 +125,13 @@ class ProblemAPI(APIView):
 
         else:
             # 不能缓存
+            fields = (
+                "description", "hint", "input_description", "output_description", "template", "samples", "test_case_id",
+                "test_case_score", "spj", "languages", "create_time", "last_update_time", "time_limit", "memory_limit",
+                "rule_type", "source", "answer", "total_score", "test_cases", "statistic_info",)
             problems = Problem.objects.filter(
                 bank=1,
-                visible=True).prefetch_related("tags")
+                visible=True).defer(*fields).prefetch_related("tags")
 
             # 按照标签筛选
             if tag_text:
@@ -213,7 +218,7 @@ class ContestProblemAPI(APIView):
 
     @check_contest_permission(check_type="problems")
     def get(self, request):
-        problem_id = request.GET.get("problem_id")
+        problem_id = request.GET.get("problem_id","")
         acm_problems_status = None
         if problem_id:
             cache_key = f"{CacheKey.contest_problemOne}:{problem_id}"
