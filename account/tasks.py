@@ -3,8 +3,12 @@ from importlib import import_module
 
 from celery import shared_task
 from django.conf import settings
-from account.models import User
+
+from account.models import User, UserProfile
+from announcement.models import Message, NotifyMessageScene, UserMessage
 from options.options import SysOptions
+from utils.cache import cache
+from utils.constants import CacheKey
 from utils.shortcuts import send_email
 
 logger = logging.getLogger(__name__)
@@ -37,4 +41,21 @@ def save_record_and_deal_repeat_login(uid, user_session_keys, m_session):
     if m_session not in user_session_keys:
         user_session_keys.append(m_session)
     User.objects.filter(pk=uid).update(session_keys=user_session_keys)
-    # logger.info()
+
+
+@shared_task
+def create_notify(make_data):
+    # mes_data = (
+    #     req_body['user_id'],
+    #     curr_uid,
+    #     pro_title,
+    #     req_body['liked_id'],
+    # )
+    creator = UserProfile.objects.filter(user_id=make_data[1]).values_list("real_name", flat=True)[0]
+    content = {'creator': creator, 'obj': make_data[2], 'instance': "submit", "sub_id": make_data[-1]}
+    mes = Message.objects.create(content=content, writer_id=make_data[1], scene=NotifyMessageScene.LIKE)
+    if mes:
+        UserMessage.objects.create(uid=make_data[0], message_id=mes.id)
+
+        cache.hincrby(CacheKey.notify_message, make_data[0], amount=1)
+

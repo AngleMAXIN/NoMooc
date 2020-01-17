@@ -1,11 +1,12 @@
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
 from celery import shared_task
-from announcement.models import Message, UserMessage
+
 from account.models import UserProfile
+from announcement.models import Message, UserMessage
+from contest.models import ContestScenes, ContestPartner
 from utils.cache import cache
 from utils.constants import CacheKey
-from contest.models import ContestScenes, ContestPartner
 
 
 @shared_task
@@ -30,13 +31,9 @@ def notify_user(contest_id, mes_id):
     if not list_uid.exists():
         return
 
-    for uid in list_uid:
-        _ = UserMessage.objects.create(uid=uid, message_id=mes_id)
+    _ = [UserMessage.objects.create(uid=uid, message_id=mes_id) for uid in list_uid]
 
-    update_user_mess_count(list_uid)
+    _ = [cache.hincrby(CacheKey.notify_message, uid, amount=1) for uid in list_uid]
 
 
-def update_user_mess_count(list_uid):
 
-    for uid in list_uid:
-        cache.hincrby(CacheKey.notify_message, uid, amount=1)

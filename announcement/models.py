@@ -5,7 +5,12 @@ from utils.models import MyRichTextField, MyJSONField
 
 
 class NotifyMessageScene:
+    # 竞赛
     CONTEST = 1
+
+    # 点赞
+    LIKE = 2
+
 
 
 class NotifyMessageType:
@@ -50,7 +55,6 @@ class Announcements(models.Model):
 class Message(models.Model):
     content = MyJSONField(default=dict, verbose_name="消息体")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
-    update_time = models.DateTimeField(null=True, verbose_name="修改时间")
     writer_id = models.IntegerField(default=0, verbose_name="消息创建者")
     type = models.CharField(
         max_length=10,
