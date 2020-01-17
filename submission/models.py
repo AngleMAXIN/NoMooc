@@ -54,6 +54,8 @@ class Submission(models.Model):
     user_id = models.IntegerField(db_index=True, verbose_name="用户id")
     real_name = models.CharField(max_length=50, default="", verbose_name="用户名")
     code = models.TextField(verbose_name="提交代码")
+    like = models.PositiveIntegerField(default=0, verbose_name="点赞数")
+    dislike = models.PositiveIntegerField(default=0, verbose_name="点踩数")
 
     def check_user_permission(self, user, check_share=True):
         return self.user_id == user.id or \
@@ -86,8 +88,8 @@ class TestSubmission(models.Model):
     language = MyCharField(max_length=10, verbose_name="语言")
     code = models.TextField(verbose_name="提交代码")
     statistic_info = MyJSONField(default=dict)
-    ip = MyCharField(max_length=20, default='')
     user_id = models.PositiveIntegerField(default=0, verbose_name="用户id")
 
     class Meta:
         db_table = "test_submission"
+

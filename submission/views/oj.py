@@ -1,6 +1,9 @@
-from django.db.models import Count, Max
+from django.db.models import Count, Max, F
+from django.db.utils import IntegrityError
 
 from account.decorators import login_required
+from account.models import Likes, LikeType
+from account.tasks import create_notify
 from contest.models import Contest, ContestPartner
 from judge.tasks import judge_task
 from problem.models import Problem, ContestProblem
@@ -13,7 +16,7 @@ from ..serializers import (
     CreateConSubmissionSerializer,
     CreateSubmissionSerializer,
     SubmissionListSerializer,
-    CreateTestSubmissionSer)
+    CreateTestSubmissionSer, CreateSubmissionLikeSerializer, SubmissionPassListSerializer)
 
 
 class ContestSubmission(APIView):
@@ -38,7 +41,7 @@ class ContestSubmission(APIView):
                 # "allowed_ip_ranges",
                 "start_time",
                 "end_time",)
-                # "created_by_id",)
+            # "created_by_id",)
             contest = Contest.objects.only(*only_fields).get(
                 pk=req_body["contest_id"], visible=True)
         except Contest.DoesNotExist:
@@ -188,9 +191,6 @@ class SubmissionListAPI(APIView):
                 submissions = submissions.filter(display_id__icontains=keyword)
             else:
                 submissions = submissions.filter(real_name__icontains=keyword)
-        # else:
-        #     return self.success()
-
         if result:
             flag = True
             # 按结果类型
@@ -224,11 +224,29 @@ class SubmissionListAPI(APIView):
 
 
 class SubmissionOneDisplay(APIView):
-    @login_required
+
+    def liked_status(self, uid, sub):
+        like_items_query = (
+            "SELECT `likes`.`id`, `likes`.`is_like`, `likes`.`is_cancel` FROM `likes` WHERE (`likes`.`liked_id` = \n"
+            "        %s AND  `likes`.`user_id` = %s AND`likes`.`liked_obj` = 'submit') LIMIT 1; ")
+        res = Likes.objects.raw(like_items_query, params=(sub['id'], uid))
+        if not res:
+            sub['like_status'] = 0
+        else:
+            if not res[0].is_cancel:
+                sub['like_status'] = 1 if res[0].is_like else -1
+            else:
+                sub['like_status'] = 0
+
     def get(self, request):
+        uid = request.session.get("_auth_user_id")
+        if not uid:
+            return self.error("用户未登录")
+
         sub_id = request.GET.get("sub_id")
 
         fields = (
+            "id",
             "code",
             "real_name",
             "result",
@@ -237,18 +255,17 @@ class SubmissionOneDisplay(APIView):
             "info",
             "display_id",
             "user_id",
+            "dislike",
+            "like",
         )
 
         sub_one = Submission.objects.filter(sub_id=sub_id).values(*fields)
         if not sub_one.exists():
             return self.error("提交记录不存在")
-
         sub_one = sub_one[0]
-
-        if request.session.get("_u_type") == "Student" and request.session.get(
-                "_auth_user_id") != sub_one['user_id']:
+        if uid != sub_one['user_id'] and request.session.get("_u_type") == "Student":
             return self.error("对不起,你没有查看此次提交的权限")
-
+        self.liked_status(uid, sub_one)
         return self.success(data=sub_one)
 
 
@@ -314,6 +331,7 @@ class ProblemPassedSubmitListAPI(APIView):
         pro_id = request.GET.get("problem_id")
         submit_by = request.GET.get("submit_by")
         language = request.GET.get("language")
+
         uid = request.session.get("_auth_user_id")
         if not Submission.objects.filter(user_id=uid, problem_id=pro_id, result=JudgeStatus.ACCEPTED).exists():
             return self.error("没通过,你是看不到的呦")
@@ -323,7 +341,9 @@ class ProblemPassedSubmitListAPI(APIView):
             list_submit = list_submit.filter(real_name__contains=submit_by)
         if language:
             list_submit = list_submit.filter(language=language)
+
         fields = (
+            "id",
             "sub_id",
             "result",
             "problem_id",
@@ -335,8 +355,55 @@ class ProblemPassedSubmitListAPI(APIView):
             "real_name",
             "contest_id",
             "length",
+            "like",
+            "dislike",
         )
         list_submit = self.paginate_data(request, list_submit.values(*fields).order_by("length"))
-        list_submit["results"] = SubmissionListSerializer(
+        list_submit["results"] = SubmissionPassListSerializer(
             list_submit["results"], many=True).data
         return self.success(data=list_submit)
+
+
+class SubmissionLike(APIView):
+    @validate_serializer(CreateSubmissionLikeSerializer)
+    def post(self, request):
+        curr_uid = request.session.get("_auth_user_id", 1)
+        if not curr_uid:
+            return self.error("用户未登录")
+
+        req_body = request.data
+        sub_up_fields = {
+            "like": F("like") + req_body['like'],
+            "dislike": F("dislike") + req_body['dislike']
+        }
+
+        try:
+            Submission.objects.filter(pk=req_body['liked_id']).update(**sub_up_fields)
+        except IntegrityError:
+            return self.error("点赞失败了耶")
+
+        filter_fields = {"liked_id": req_body['liked_id'],
+                         "user_id": curr_uid,
+                         "liked_obj": LikeType.submit}
+
+        pro_title = req_body['pro_title']
+
+        defaults = {
+            "is_cancel": True if req_body['like'] + req_body['dislike'] < 0 else False,
+            "is_like": True if req_body['like'] > 0 else False
+        }
+
+        _, created = Likes.objects.update_or_create(**filter_fields, defaults=defaults)
+
+        if (created and req_body['like'] > 0) or (not created and req_body['like'] > 0 and req_body['dislike'] < 0):
+            # 如果当前用户第一次操作，且为点赞,代表第一点赞
+            # 当前用户曾经操作过，这是是点菜之后，再点赞
+            # 排除不断重复点赞情况
+            mes_data = (
+                req_body['user_id'],
+                curr_uid,
+                pro_title,
+                req_body['liked_id'],
+            )
+            create_notify.delay(mes_data)
+        return self.success()

@@ -28,6 +28,14 @@ class CreateSubmissionSerializer(serializers.Serializer):
     length = serializers.IntegerField(required=True)
 
 
+class CreateSubmissionLikeSerializer(serializers.Serializer):
+    liked_id = serializers.IntegerField()
+    user_id = serializers.IntegerField()
+    pro_title = serializers.CharField()
+    like = serializers.IntegerField()
+    dislike = serializers.IntegerField()
+
+
 class ShareSubmissionSerializer(serializers.Serializer):
     id = serializers.CharField()
     shared = serializers.BooleanField()
@@ -61,8 +69,23 @@ class SubmissionListSerializer(serializers.ModelSerializer):
             "code",
             "ip",
             "shared",
+            "like",
+            "dislike",
         )
 
+
+class SubmissionPassListSerializer(serializers.ModelSerializer):
+    contest_id = serializers.IntegerField()
+
+    class Meta:
+        model = Submission
+        exclude = (
+            "info",
+            "contest",
+            "code",
+            "ip",
+            "shared",
+        )
 
 class ContestSubmissionListSerializer(serializers.ModelSerializer):
 

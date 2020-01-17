@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from django.utils.timezone import now
 
 from options.options import OptionDefaultValue
 from utils.models import MyCharField, MyJSONField
@@ -237,8 +238,28 @@ class AdminOperationRecord(models.Model):
     u_type = models.CharField(max_length=20, default="", verbose_name="用户权限")
     action_time = models.DateTimeField(auto_now_add=True, verbose_name="发生时间")
     api = models.CharField(max_length=255, default="", verbose_name="请求api")
-    action = models.CharField(max_length=5, default="", verbose_name="动作")
+    action = models.CharField(max_length=7, default="", verbose_name="动作")
     location = models.CharField(max_length=100, default="", verbose_name="页面")
 
     class Meta:
         db_table = "admin_op_record"
+
+
+class LikeType:
+    submit = "submit"
+    article = "article"
+    comment = "comment"
+
+
+class Likes(models.Model):
+    # true 点赞 false 点踩
+    is_like = models.BooleanField(default=True, verbose_name="是否点赞")
+    liked_id = models.PositiveIntegerField(default=0, verbose_name="被点赞对象的id")
+    is_cancel = models.BooleanField(default=False, verbose_name="是否取消")
+    user_id = models.PositiveIntegerField(default=0, verbose_name="用户id")
+    # submit/article/comment
+    liked_obj = MyCharField(max_length=8, default="", verbose_name="点赞的对象")
+    created_time = models.DateTimeField(auto_now_add=True, verbose_name="点赞/点踩时间")
+
+    class Meta:
+        db_table = "likes"
