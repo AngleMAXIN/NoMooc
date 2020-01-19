@@ -35,17 +35,6 @@ class UserSendCaptchaAPISerializer(serializers.Serializer):
     option = serializers.CharField(max_length=15)
 
 
-class UserFrontInfoBandSerializer(serializers.Serializer):
-    qq = serializers.IntegerField(default=0)
-    uid = serializers.IntegerField(default=0)
-    _type = serializers.CharField(max_length=40, required=False)
-    github = serializers.CharField(max_length=40, required=False)
-    webchat = serializers.CharField(max_length=40, required=False)
-    sex = serializers.CharField(required=False)
-    desc = serializers.CharField(required=False)
-    username = serializers.CharField(required=False)
-
-
 class UserRecordSerializer(serializers.ModelSerializer):
     """docstring for UserSession"""
 
@@ -240,6 +229,7 @@ class RankInfoSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     real_name = serializers.CharField()
     avatar = serializers.CharField()
+    user__username = serializers.CharField()
 
 
 class UserContestPermCheckSerializer(serializers.Serializer):
@@ -255,6 +245,8 @@ class UserGradeListSerializers(serializers.ModelSerializer):
 
 
 class AdminOperationRecordSerializers(serializers.ModelSerializer):
+    real_name = serializers.CharField()
+
     class Meta:
         model = AdminOperationRecord
         fields = '__all__'

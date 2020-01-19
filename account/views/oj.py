@@ -22,8 +22,7 @@ from ..serializers import (
     RankInfoSerializer,
     UserRecordSerializer,
     UserContestPermCheckSerializer,
-    ImageUploadForm
-)
+    ImageUploadForm)
 from ..tasks import send_email_async, save_record_and_deal_repeat_login
 
 
@@ -800,7 +799,9 @@ class UserRankAPI(APIView):
             "submission_number",
             "accepted_number",
             "real_name",
-            "user_id",)
+            "user_id",
+            "user__username",
+        )
 
         list_rank = UserProfile.objects.filter(
             user__is_disabled=False, user__is_auth=True).exclude(
@@ -873,7 +874,6 @@ class UserInfoFrontAPI(APIView):
         return self.success(data)
 
     @login_required
-    # @validate_serializer(UserFrontInfoBandSerializer)
     def put(self, request):
         update_dict = request.data
         _type = update_dict.pop("_type", None)

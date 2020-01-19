@@ -162,11 +162,11 @@ class UserAdminAPI(APIView):
             register_type__in=(
                 'normal',
                 'factory',
-            )). select_related("userprofile"). only(
+            )).select_related("userprofile").only(
             *
-            self.val_list). values(
-                *
-                self.val_list)
+            self.val_list).values(
+            *
+            self.val_list)
 
         keyword = request.GET.get("keyword", None)
         # keyword 可以是
@@ -399,7 +399,7 @@ class GenerateUserAPI(APIView):
         worksheet.write("C1", "RealName")
 
         user_list, len_password, prefix = [
-        ], data['password_len'], data['prefix'] + rand_str(1, 'num')
+                                          ], data['password_len'], data['prefix'] + rand_str(1, 'num')
         for number in range(data["number"]):
             raw_password = rand_str(len_password)
             user = User(
@@ -607,7 +607,7 @@ class UserGradeListAPI(APIView):
                     department__contains=keyword) | Q(
                     level__contains=keyword) | Q(
                     edu_level__contains=keyword)).values(
-                        *fields)
+                *fields)
         list_grade_stu_number = User.objects.filter(
             grade__isnull=False).annotate(
             student_number=Count("grade_id")).values_list(
@@ -685,7 +685,6 @@ class UserOfGradeRankAPI(APIView):
             RankInfoSerializer)
 
     def get(self, request):
-
         level = request.GET.get("level")
         major = request.GET.get("major")
         real_name = request.GET.get("real_name")
@@ -697,7 +696,7 @@ class UserOfGradeRankAPI(APIView):
 
 
 class UserGradeOne(APIView):
-    def get(self,request):
+    def get(self, request):
         grade_id = request.GET.get("grade_id")
         fields = (
             "level",
@@ -715,6 +714,16 @@ class UserGradeOne(APIView):
 
 class UserAdminOperationRecord(APIView):
     def get(self, request):
-        list_record = AdminOperationRecord.objects.all().order_by('-action_time')
-        res = self.paginate_data(request, list_record, AdminOperationRecordSerializers)
-        return self.success(data=res)
+        offset = int(request.GET.get("offset", 0))
+        limit = int(request.GET.get("limit", 20))
+
+        query = """select ad.id, ad.u_type, ad.action, ad.action_time, ad.api, ad.location, up.real_name from 
+        admin_op_record ad inner join user_profile up on up.user_id=ad.uid order by  action_time desc limit %s, %s; """
+        list_record = AdminOperationRecord.objects.raw(query, params=[offset, limit + offset], translations="")
+        data = {
+            "total": AdminOperationRecord.objects.count(),
+            "results": AdminOperationRecordSerializers(list_record,many=True).data,
+        }
+        # res = ""
+        # res = self.paginate_data(request, list_record, AdminOperationRecordSerializers)
+        return self.success(data=data)
