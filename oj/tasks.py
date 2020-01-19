@@ -11,7 +11,7 @@ from oj.celery import app
 from options.models import SysOptions as SysOptionsModel
 from options.options import OptionKeys
 from problem.models import Problem
-from submission.models import Submission, TestSubmission
+from submission.models import Submission, TestSubmission, JudgeStatus
 from utils.cache import cache
 from utils.constants import CacheKey
 
@@ -29,9 +29,9 @@ def daily_info_count():
 
     submissions = Submission.objects.filter(create_time__gt=start)
     # 通过数量
-    accept_count = submissions.filter(result=0).count()
+    accept_count = submissions.filter(result=JudgeStatus.ACCEPTED).count()
     # 提交数量
-    sub_count = submissions.aggregate(Max("id")).get("id__max", 0)
+    sub_count = submissions.count()
 
     DailyInfoStatus.objects.create(sub_count=sub_count,
                                    con_count=con_count,
