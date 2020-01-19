@@ -329,6 +329,10 @@ class ProblemAPI(APIView):
         if visible:
             problems = problems.filter(visible=True)
 
+        sort_by_call = request.GET.get("sort_by_call")
+        if sort_by_call:
+            problems = problems.order_by("-call_count")
+
         # 按标题或id查找
         keyword = request.GET.get("keyword", "").strip()
         if keyword:
@@ -341,9 +345,7 @@ class ProblemAPI(APIView):
                 AdminProblemListSerializer))
 
     def check_test_case_null(self, test_case):
-        if not test_case:
-            return True
-        if len(test_case) == 0:
+        if not test_case or len(test_case) == 0:
             return True
         if not test_case[0]['input'] or not test_case[0]['output']:
             return True
