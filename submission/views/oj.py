@@ -52,7 +52,7 @@ class ContestSubmission(APIView):
         elif contest.status == ContestStatus.CONTEST_NOT_START:
             return self.error("竞赛未开始", err="contest_not_ready")
 
-        curr_ip = request.META.get("HTTP_X_REAL_IP")
+        # curr_ip = request.META.get("HTTP_X_REAL_IP")
         # if uid != contest.created_by_id:
         #     # 如果用户不是竞赛的管理员或是超级管理员，就需要验证ip
         #     user_ip = ipaddress.ip_address(curr_ip)
@@ -68,7 +68,7 @@ class ContestSubmission(APIView):
         if not pro.exists():
             return self.error("试题不存在")
 
-        req_body['ip'] = curr_ip
+        req_body['ip'] = "127.0.0.1"
         req_body['user_id'] = uid
         req_body['display_id'] = pro[0]
         submission = Submission.objects.create(**req_body)
@@ -132,12 +132,12 @@ class TestSubmissionAPI(APIView):
     def post(self, request):
         req_body = request.data
 
-        ProblemModel = Problem
+        problem_model = Problem
         con_id = req_body.get("contest_id")
         if con_id:
-            ProblemModel = ContestProblem
+            problem_model = ContestProblem
 
-        pro = ProblemModel.objects.filter(
+        pro = problem_model.objects.filter(
             pk=req_body["problem_id"])
         if not pro.exists():
             return self.success("试题不存在")
