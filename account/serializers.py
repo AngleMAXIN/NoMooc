@@ -230,6 +230,7 @@ class RankInfoSerializer(serializers.Serializer):
     real_name = serializers.CharField()
     avatar = serializers.CharField()
     user__username = serializers.CharField()
+    user__user_id = serializers.CharField()
 
 
 class UserContestPermCheckSerializer(serializers.Serializer):

@@ -794,14 +794,6 @@ class ResetPasswordAPI(APIView):
 class UserRankAPI(APIView):
 
     def get_user_rank(self, request, real_name=None):
-        val_list = (
-            "avatar",
-            "submission_number",
-            "accepted_number",
-            "real_name",
-            "user_id",
-            "user__username",
-        )
 
         list_rank = UserProfile.objects.filter(
             user__is_disabled=False, user__is_auth=True).exclude(
@@ -810,6 +802,15 @@ class UserRankAPI(APIView):
         if real_name:
             list_rank = list_rank.filter(real_name__contains=real_name)
 
+        val_list = (
+            "avatar",
+            "submission_number",
+            "accepted_number",
+            "real_name",
+            "user_id",
+            "user__username",
+            "user__user_id",
+        )
         list_rank = list_rank.values(*val_list).order_by(
             "-accepted_number",
             "submission_number")
@@ -837,7 +838,6 @@ class UserRankAPI(APIView):
 
 
 class UserInfoFrontAPI(APIView):
-    # todo login must
 
     @login_required
     def get(self, request):
