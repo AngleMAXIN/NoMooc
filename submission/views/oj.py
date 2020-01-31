@@ -1,3 +1,5 @@
+import json
+
 from django.db.models import Count, Max, F
 from django.db.utils import IntegrityError
 
@@ -89,7 +91,6 @@ class SubmissionAPI(APIView):
             return self.error("试题不存在")
 
         pro = pro[0]
-
         # req_body['ip'] = request.META.get("HTTP_X_REAL_IP")
         req_body['user_id'] = request.session.get("_auth_user_id")
         req_body['display_id'] = pro['_id']
@@ -137,13 +138,14 @@ class TestSubmissionAPI(APIView):
         if con_id:
             problem_model = ContestProblem
 
-        pro = problem_model.objects.filter(
-            pk=req_body["problem_id"])
+        pro = problem_model.objects.filter(pk=req_body["problem_id"])
         if not pro.exists():
             return self.success("试题不存在")
 
+        custom_test_cases = req_body.pop("custom_test_cases")
         submission = TestSubmission.objects.create(**req_body)
-        judge_task.delay(submission.sub_id, req_body['problem_id'], True)
+
+        judge_task.delay(submission.sub_id, req_body['problem_id'], custom_test_cases, True)
 
         return self.success({"submission_id": submission.sub_id})
 
@@ -165,17 +167,13 @@ class ResultTestSubmission(APIView):
 class SubmissionListAPI(APIView):
     def get(self, request):
 
+        submissions, flag = Submission.objects, False
         problem_id = request.GET.get("problem_id")
-        myself = request.GET.get("myself")
-        result = request.GET.get("result")
-        keyword = request.GET.get("keyword", "")
-
-        submissions = Submission.objects
-        flag = False
         if problem_id:
             flag = True
             submissions = submissions.filter(problem_id=problem_id)
 
+        myself = request.GET.get("myself")
         if myself:
             # 仅查找自己的提交记录
             flag = True
@@ -183,6 +181,7 @@ class SubmissionListAPI(APIView):
                 user_id=request.session.get(
                     "_auth_user_id"))
 
+        keyword = request.GET.get("keyword", "")
         if keyword:
             flag = True
             # 按用户名查找
@@ -191,6 +190,8 @@ class SubmissionListAPI(APIView):
                 submissions = submissions.filter(display_id__icontains=keyword)
             else:
                 submissions = submissions.filter(real_name__icontains=keyword)
+
+        result = request.GET.get("result")
         if result:
             flag = True
             # 按结果类型

@@ -3,12 +3,31 @@ from utils.api import serializers
 from judge.languages import language_names
 
 
+class CreateSampleSerializer(serializers.Serializer):
+    input = serializers.CharField(allow_null=True,
+                                  allow_blank=True,
+                                  max_length=128,
+                                  trim_whitespace=False,
+                                  error_messages={"max_length":"输入用例长度不能超过 128"},
+                                  required=False)
+    output = serializers.CharField(
+        allow_blank=True,
+        allow_null=True,
+        max_length=128,
+        trim_whitespace=False,
+        error_messages={"max_length":"输出用例长度不能超过 128"},
+        required=False)
+
+
 class CreateTestSubmissionSer(serializers.Serializer):
     problem_id = serializers.IntegerField()
     contest_id = serializers.IntegerField(required=False)
     language = serializers.ChoiceField(choices=language_names)
     code = serializers.CharField(min_length=20, max_length=1024 * 1024)
     user_id = serializers.IntegerField(min_value=0)
+    custom_test_cases = serializers.ListField(child=CreateSampleSerializer(),
+                                              error_messages={"max_length": "输出用例长度不能超过 128"},
+                                              allow_empty=True, required=False)
 
 
 class CreateConSubmissionSerializer(serializers.Serializer):
@@ -42,7 +61,6 @@ class ShareSubmissionSerializer(serializers.Serializer):
 
 
 class SubmissionModelSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Submission
         fields = "__all__"
@@ -87,8 +105,8 @@ class SubmissionPassListSerializer(serializers.ModelSerializer):
             "shared",
         )
 
-class ContestSubmissionListSerializer(serializers.ModelSerializer):
 
+class ContestSubmissionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
         fields = (

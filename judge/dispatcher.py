@@ -96,23 +96,24 @@ class SPJCompiler(DispatcherBase):
 
 
 class JudgeDispatcher(DispatcherBase):
-    def __init__(self, submission_id, problem_id, test_sub=False):
+    def __init__(self, submission_id, problem_id, custom_test, test_sub=False):
         super().__init__()
 
         self.test_sub = test_sub
+        self.custom_test = custom_test
+
         submission_model = Submission
         if self.test_sub:
             submission_model = TestSubmission
-            self.__val_list = (
+            __val_list = (
                 "id",
                 "_id",
                 "samples",
                 "rule_type",
                 "time_limit",
-                "test_cases",
                 "memory_limit",)
         else:
-            self.__val_list = (
+            __val_list = (
                 "id",
                 "_id",
                 "test_case_id",
@@ -127,7 +128,7 @@ class JudgeDispatcher(DispatcherBase):
 
         if self.contest_id:
             self.problem = ContestProblem.objects.filter(
-                pk=problem_id).values(*self.__val_list)[0]
+                pk=problem_id).values(*__val_list)[0]
             only_fields = (
                 "id",
                 "rule_type",
@@ -137,7 +138,7 @@ class JudgeDispatcher(DispatcherBase):
                 *only_fields).get(pk=self.contest_id)
         else:
             self.problem = Problem.objects.filter(
-                pk=problem_id).values(*self.__val_list)[0]
+                pk=problem_id).values(*__val_list)[0]
 
         self.problem_id = problem_id
 
@@ -154,7 +155,8 @@ class JudgeDispatcher(DispatcherBase):
             # 如果没有判题机可用,就先把信息存入消息队列,返回
             data = {
                 "submission_id": self.submission.sub_id,
-                "problem_id": self.problem_id}
+                "problem_id": self.problem_id,
+                "test_sub": self.test_sub}
             cache.lpush(CacheKey.waiting_queue, json.dumps(data))
             return
         language = self.submission.language
@@ -167,7 +169,7 @@ class JudgeDispatcher(DispatcherBase):
             "language_config": sub_config["config"],
             "src": self.submission.code,
             "max_cpu_time": self.problem.get("time_limit"),
-            "max_memory": 1024 * 1024 * self.problem.get("memory_limit"),
+            "max_memory": self.problem.get("memory_limit") << 20,
             "test_case_id": None,
             "test_case": None,
             "output": True,
@@ -178,7 +180,10 @@ class JudgeDispatcher(DispatcherBase):
 
         }
         if self.test_sub:
-            data['test_case'] = self.problem.get("samples")
+            if self.custom_test:
+                data['test_case'] = self.custom_test
+            else:
+                data['test_case'] = self.problem.get("samples")
         else:
             data['test_case_id'] = self.problem.get("test_case_id")
 
@@ -186,7 +191,7 @@ class JudgeDispatcher(DispatcherBase):
         self.submission.result = JudgeStatus.JUDGING
         self.submission.save(update_fields=("result",))
 
-        cache.hset(CacheKey.submit_prefix, self.submission.sub_id, 7)
+        cache.hset(CacheKey.submit_prefix, self.submission.sub_id, JudgeStatus.JUDGING)
 
         # 发送提交到判题机
         resp = self._request(urljoin(server.service_url, "/judge"), data=data)

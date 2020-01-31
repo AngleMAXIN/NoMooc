@@ -5,5 +5,5 @@ from judge.dispatcher import JudgeDispatcher
 
 
 @shared_task
-def judge_task(submission_id, problem_id, test_sub=False):
-    JudgeDispatcher(submission_id, problem_id, test_sub).judge()
+def judge_task(submission_id, problem_id, custom_test=None, test_sub=False):
+    JudgeDispatcher(submission_id, problem_id, custom_test, test_sub).judge()
