@@ -49,13 +49,12 @@ class UserDoProblemStatus(APIView):
             user_problems_status["accepted_number"]
 
         public_pro_count = cache.get(CacheKey.public_pro_count)
-        pub_pro_count = 0
         if not public_pro_count:
-            pub_pro_count = Problem.objects.filter(
+            public_pro_count = Problem.objects.filter(
                 bank=1, visible=True).count()
-            cache.set(CacheKey.public_pro_count, pub_pro_count, timeout=60*30)
+            cache.set(CacheKey.public_pro_count, public_pro_count)
         # 没有做的题目数
-        user_problems_status["not_try"] = pub_pro_count - have_do
+        user_problems_status["not_try"] = public_pro_count - have_do
 
         return self.success(data=user_problems_status)
 

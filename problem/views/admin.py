@@ -369,7 +369,7 @@ class ProblemAPI(APIView):
 
             list_cache_prefix = _redis.keys(f"{CacheKey.problems}:*")
             [cache.delete(key.decode()) for key in list_cache_prefix]
-
+            cache.delete(CacheKey.public_pro_count)
             return self.success(r)
 
         try:
