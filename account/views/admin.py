@@ -664,6 +664,8 @@ class UserOfGradeRankAPI(APIView):
 
     def get_user_rank(self, request, grade_list=None, real_name=""):
         val_list = (
+            "user__user_id",
+            "user__username",
             "avatar",
             "submission_number",
             "accepted_number",
