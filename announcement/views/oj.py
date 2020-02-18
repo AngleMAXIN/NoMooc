@@ -43,7 +43,7 @@ class AnnouncementAPI(APIView):
                 "is_top",
                 "content",
             )
-            announcements = Announcements.objects.filter(visible=True).values(*fields).order_by("-create_time")
+            announcements = Announcements.objects.filter(visible=True).values(*fields).order_by("-last_update_time")
             set_data = self.paginate_data(
                 request,
                 announcements,
