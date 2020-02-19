@@ -117,7 +117,7 @@ class ProblemAPI(APIView):
             if not data:
                 problems = Problem.objects.filter(
                     bank=1,
-                    visible=True).prefetch_related("tags").order_by("submission_number")
+                    visible=True).prefetch_related("tags").order_by("id")
 
                 data = self.paginate_data(request, problems, ProblemSerializer)
 
@@ -219,6 +219,9 @@ class ContestProblemAPI(APIView):
     @check_contest_permission(check_type="problems")
     def get(self, request):
         problem_id = request.GET.get("problem_id","")
+        if not problem_id.isdigit():
+            return self.error("参数不正确")
+            
         acm_problems_status = None
         if problem_id:
             cache_key = f"{CacheKey.contest_problemOne}:{problem_id}"
