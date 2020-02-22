@@ -168,10 +168,13 @@ class SubmissionListAPI(APIView):
     def get(self, request):
 
         submissions, flag = Submission.objects, False
-        problem_id = request.GET.get("problem_id")
+        problem_id = request.GET.get("problem_id", "")
         if problem_id:
-            flag = True
-            submissions = submissions.filter(problem_id=problem_id)
+            if problem_id.isdigit():
+                flag = True
+                submissions = submissions.filter(problem_id=problem_id)
+            else:
+                return self.error("参数不正确")
 
         myself = request.GET.get("myself")
         if myself:
@@ -197,6 +200,12 @@ class SubmissionListAPI(APIView):
             # 按结果类型
             submissions = submissions.filter(result=result)
 
+        lang = request.GET.get("lang")
+        if lang:
+            flag = True
+            # 按语言类型
+            submissions = submissions.filter(language=lang)
+
         fields = (
             "sub_id",
             "result",
@@ -218,7 +227,7 @@ class SubmissionListAPI(APIView):
             data['results'] = submissions.filter(id__gte=(data['total'] - limit * page),
                                                  id__lte=data['total'] - offset).values(*fields)[:limit]
         else:
-            data = self.paginate_data(request, submissions)
+            data = self.paginate_data(request, submissions.values(*fields))
         data["results"] = SubmissionListSerializer(
             data['results'], many=True).data
         return self.success(data)
