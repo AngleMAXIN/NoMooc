@@ -297,7 +297,7 @@ class ContestSubmissionList(APIView):
             uid = request.session.get("_auth_user_id")
             submissions = submissions.filter(user_id=uid)
 
-        if len(keyword) > 1:
+        if keyword:
             # 按用户名查找
             if keyword.isdigit():
                 # 试题id
