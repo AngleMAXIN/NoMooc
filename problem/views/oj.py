@@ -100,6 +100,7 @@ class ProblemAPI(APIView):
                                          user_id=user_login,
                                          result=JudgeStatus.ACCEPTED).exists():
                 problem['is_accepted'] = 1
+            problem['tags'] = [tag[1] for tag in ProblemTag.objects.filter(problem__id=problem_id).values_list()]
             return self.success(problem)
 
         limit = request.GET.get("limit", 0)
@@ -218,12 +219,10 @@ class ContestProblemAPI(APIView):
 
     @check_contest_permission(check_type="problems")
     def get(self, request):
-        problem_id = request.GET.get("problem_id","")
-        if not problem_id.isdigit():
-            return self.error("参数不正确")
-            
         acm_problems_status = None
-        if problem_id:
+        problem_id = request.GET.get("problem_id", "")
+
+        if problem_id.isdigit():
             cache_key = f"{CacheKey.contest_problemOne}:{problem_id}"
             data = cache.get(cache_key)
             if not data:
