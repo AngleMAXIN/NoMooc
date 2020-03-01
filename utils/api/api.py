@@ -64,9 +64,8 @@ class APIView(View):
     response_class = JSONResponse
 
     def _get_request_data(self, request):
-        if request.method not in ["GET", "DELETE"]:
+        if request.method not in ("GET", "DELETE"):
             # post / put
-            body = request.body
             content_type = request.META.get("CONTENT_TYPE")
             if not content_type:
                 raise ValueError("content_type is required")
@@ -76,6 +75,7 @@ class APIView(View):
             # else means the for loop is not interrupted by break
             else:
                 raise ValueError("unknown content_type '%s'" % content_type)
+            body = request.body
             if body:
                 return parser.parse(body)
             return {}
