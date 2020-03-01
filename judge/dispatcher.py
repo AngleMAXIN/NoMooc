@@ -108,7 +108,6 @@ class JudgeDispatcher(DispatcherBase):
             __val_list = (
                 "id",
                 "_id",
-                "samples",
                 "rule_type",
                 "time_limit",
                 "memory_limit",)
@@ -180,10 +179,7 @@ class JudgeDispatcher(DispatcherBase):
 
         }
         if self.test_sub:
-            if self.custom_test:
-                data['test_case'] = self.custom_test
-            else:
-                data['test_case'] = self.problem.get("samples")
+            data['test_case'] = self.custom_test
         else:
             data['test_case_id'] = self.problem.get("test_case_id")
 
