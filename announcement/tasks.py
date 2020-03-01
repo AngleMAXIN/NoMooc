@@ -4,7 +4,7 @@ from celery import shared_task
 
 from account.models import UserProfile
 from announcement.models import Message, UserMessage
-from contest.models import ContestScenes, ContestPartner
+from contest.models import ContestScenes, ContestPartner,Contest
 from utils.cache import cache
 from utils.constants import CacheKey
 
@@ -17,8 +17,9 @@ def create_notify(make_data):
 
     content['creater'] = real_name
     content['title'] = make_data[1]
-    content['start_time'] = make_data[2]
-    content['end_time'] = make_data[3]
+    times = Contest.objects.values_list("star_time", "end_time").filter(pk=make_data[2])
+    content['start_time'] = times[0]
+    content['end_time'] = times[1]
     content['scenes'] = ContestScenes.get_type(str_num=int(make_data[4]))
 
     mes = Message.objects.create(content=content, writer_id=uid)

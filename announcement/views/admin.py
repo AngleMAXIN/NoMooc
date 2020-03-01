@@ -21,8 +21,7 @@ class MessagePush(APIView):
         make_data = (
             contest.created_by_id,
             contest.title,
-            contest.start_time,
-            contest.end_time,
+            contest.id,
             contest.scenes,
             contest.id,
         )
