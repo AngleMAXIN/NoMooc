@@ -1,0 +1,354 @@
+
+.ivu-layout {
+  background: #e1e5e9;
+
+  &-footer {
+    background: #e1e5e9;
+  }
+
+  &-header {
+    height: 60px;
+    padding: 0;
+    line-height: 1.5;
+    background: #ffffff;
+  }
+}
+
+@tooltip-prefix-cls: ~'ivu-tooltip';
+.@{tooltip-prefix-cls} {
+  &-popper {
+    font-size: 12px !important;
+  }
+}
+
+@menu-prefix-cls: ~'ivu-menu';
+.@{menu-prefix-cls} {
+  &-light {
+    &.@{menu-prefix-cls}-horizontal {
+      & .@{menu-prefix-cls}-item,
+      & .@{menu-prefix-cls}-submenu {
+        border-bottom: 2px solid #ffffff;
+      }
+
+      & .@{menu-prefix-cls}-item-active {
+        color: #358cff;
+        border-bottom: 2px solid #358cff;
+      }
+    }
+
+    &.@{menu-prefix-cls}-vertical {
+      & .@{menu-prefix-cls}-item-active {
+        &:not(.@{menu-prefix-cls}-submenu) {
+          color: #358cff;
+
+          &::after {
+            width: 2px;
+            background: #358cff;
+            z-index: 1000;
+          }
+        }
+      }
+
+      &.@{menu-prefix-cls}-light {
+        &::after {
+          width: 1px;
+        }
+      }
+    }
+  }
+}
+
+@tooltip-prefix-cls: ~'ivu-tooltip';
+.@{tooltip-prefix-cls} {
+  &-inner {
+    max-width: none;
+  }
+}
+
+.ivu-checkbox {
+  .size(14px, 14px);
+  margin-right: 4px;
+
+  &-wrapper {
+    font-size: 13px;
+  }
+
+  &-inner {
+    .size(14px, 14px);
+
+    &:after {
+      left: 4px !important;
+    }
+  }
+
+  &-input {
+    .size(14px, 14px);
+  }
+
+  .size(@width; @height) {
+    width: @width;
+    height: @height;
+  }
+}
+
+.ivu-table {
+  font-weight: 500;
+
+  & table {
+    width: 100% !important;
+  }
+
+  & td {
+    height: 41px;
+  }
+}
+
+@input-prefix-cls: ~'ivu-input';
+.@{input-prefix-cls} {
+  height: 28px;
+  font-size: 12px !important;
+
+  &-large {
+    height: 32px;
+    font-size: 12px;
+  }
+
+  &-suffix,
+  &-prefix {
+    z-index: 3;
+  }
+
+  &-wrapper {
+    & .@{input-prefix-cls}-icon,
+    & .@{input-prefix-cls}-prefix i,
+    & .@{input-prefix-cls}-suffix i {
+      height: 28px;
+      line-height: 28px;
+    }
+
+    &-large {
+      & .@{input-prefix-cls}-icon,
+      & .@{input-prefix-cls}-suffix i,
+      & .@{input-prefix-cls}-prefix i {
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+  }
+
+  &-group {
+    &-large {
+      & .@{input-prefix-cls},
+      & > .@{input-prefix-cls}-group-append,
+      & > .@{input-prefix-cls}-group-prepend {
+        font-size: 12px;
+        height: 32px;
+      }
+    }
+  }
+}
+
+@cascader-prefix-cls: ~'ivu-cascader';
+.@{cascader-prefix-cls} {
+  &-size {
+    &-large {
+      & .@{cascader-prefix-cls}-label {
+        line-height: 34px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.ivu-btn {
+  height: 28px;
+  font-size: 12px;
+
+  &:hover {
+    .button-color(#358cff; #ffffff; #358cff);
+  }
+
+  &-success {
+    &:hover {
+      .button-color(#ffffff; #19be6b; #19be6b);
+    }
+  }
+
+  &-large {
+    height: 32px;
+    font-size: 12px;
+  }
+
+  &-small {
+    font-size: 12px;
+  }
+
+  &-primary {
+    background-color: #358cff;
+    border-color: #358cff;
+    &:hover {
+      .button-color(#ffffff; #358cff; #358cff);
+    }
+  }
+
+  &-icon-only&-large {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  &-text {
+    &:hover {
+      .button-color(#358cff; transparent; transparent);
+    }
+    &:active,
+    &.active {
+      .button-color(#358cff; transparent; transparent);
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px transparent;
+    }
+    .button-variant(#358cff, transparent, transparent);
+  }
+
+  .button-color(@color; @background; @border) {
+    color: @color;
+    background-color: @background;
+    border-color: @border;
+    > a:only-child {
+      color: currentColor;
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: transparent;
+      }
+    }
+  }
+
+  .button-variant(@color; @background; @border) {
+    .button-color(@color; @background; @border);
+
+    &:hover {
+      .button-color(@color; @background; @border);
+    }
+    &:active,
+    &.active {
+      .button-color(@color; @background; @border);
+    }
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+      &,
+      &:hover,
+      &:focus,
+      &:active,
+      &.active {
+        .button-color(#c5c8ce; @background; @border);
+      }
+    }
+  }
+}
+
+@select-prefix-cls: ~'ivu-select';
+.@{select-prefix-cls} {
+  &-single &-selection {
+    height: 28px;
+    .@{select-prefix-cls}-placeholder,
+    .@{select-prefix-cls}-selected-value {
+      height: 26px;
+      line-height: 27px;
+      font-size: 12px;
+    }
+  }
+
+  &-large&-single &-selection {
+    height: 32px;
+    .@{select-prefix-cls}-placeholder,
+    .@{select-prefix-cls}-selected-value {
+      height: 32px - 2px;
+      line-height: 32px - 2px;
+      font-size: 13px;
+    }
+  }
+
+  &-large&-multiple &-selection {
+    min-height: 32px;
+    .@{select-prefix-cls}-placeholder,
+    .@{select-prefix-cls}-selected-value {
+      min-height: 32px - 2px;
+      line-height: 32px - 2px;
+      font-size: 13px;
+    }
+  }
+
+  &-large &-input,
+  &-large&-multiple &-input {
+    font-size: 13px;
+    height: 32px - 8px;
+    line-height: 32px - 8px;
+    top: 3px;
+  }
+
+  &-large&-multiple .ivu-tag {
+    height: 32px - 8px;
+    line-height: 22px;
+    font-size: 12px;
+    i {
+      top: 5px;
+    }
+  }
+}
+
+.ivu-card {
+  overflow: hidden;
+}
+
+@tabs-prefix-cls: ~'ivu-tabs';
+.@{tabs-prefix-cls} {
+  background: #ffffff;
+  &-bar {
+    background-color: #f8f8f9;
+    box-shadow: inset 0px -1px 0px 0px #dcdee2;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  &.@{tabs-prefix-cls}-card {
+    & > .@{tabs-prefix-cls}-bar .@{tabs-prefix-cls}-tab {
+      margin-right: 0;
+      border-radius: 0;
+      border-color: #f8f8f9 #f8f8f9 #dcdee2 #f8f8f9;
+      border-bottom: 1px solid #dcdee2;
+      background: #f8f8f9;
+      height: 39px;
+      &-active {
+        background: #ffffff;
+        border-color: #ffffff #dcdee2 #ffffff #dcdee2;
+      }
+    }
+    & > .@{tabs-prefix-cls}-bar .@{tabs-prefix-cls}-nav-container {
+      height: 39px;
+    }
+  }
+  &-nav-container {
+    font-size: 13px;
+    line-height: 2.1;
+    &:focus {
+      outline: none;
+      .@{tabs-prefix-cls}-tab-focused {
+        border-color: #ffffff #dcdee2 #ffffff #dcdee2 !important;
+      }
+    }
+  }
+}
+
+@radio-prefix-cls: ~'ivu-radio';
+.@{radio-prefix-cls} {
+  &-group-button &-wrapper {
+    font-size: 12px;
+  }
+}
