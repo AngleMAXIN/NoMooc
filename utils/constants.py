@@ -45,9 +45,11 @@ class CacheKey:
     contest_list = "contest:list"
     notify_message = "user:notify"
     user_rank = "user:rank"
-    submit_prefix = "submitRes"
+    submit_prefix = "submit:status"
+    custom_test_cases = "submit:custom_test_cases"
     announcementsList = "announcementList"
     public_pro_count = "public_pro_count"
+    problems_pass_submit = "problem:pass_submit"
 
     options_last_test_sub_id = "options:options_last_test_sub_id"
 

@@ -346,11 +346,21 @@ class ProblemPassedSubmitListAPI(APIView):
         if not Submission.objects.filter(user_id=uid, problem_id=pro_id, result=JudgeStatus.ACCEPTED).exists():
             return self.error("没通过,你是看不到的呦")
 
-        list_submit = Submission.objects.filter(problem_id=pro_id, contest__isnull=True, result=JudgeStatus.ACCEPTED)
+        cache_key = f"{CacheKey.problems_pass_submit}:{pro_id}"
+        list_submit = cache.get(cache_key)
+        if not list_submit:
+            list_submit = Submission.objects.filter(problem_id=pro_id, contest__isnull=True, result=JudgeStatus.ACCEPTED)
+            cache.set(cache_key, list_submit, timeout=3600)
+
         if submit_by:
             list_submit = list_submit.filter(real_name__contains=submit_by)
         if language:
             list_submit = list_submit.filter(language=language)
+
+        order_fields = 'length'
+        sort_like = request.GET.get("sort_like", "0")
+        if sort_like == "1":
+            order_fields = "-like"
 
         fields = (
             "id",
@@ -368,7 +378,8 @@ class ProblemPassedSubmitListAPI(APIView):
             "like",
             "dislike",
         )
-        list_submit = self.paginate_data(request, list_submit.values(*fields).order_by("length"))
+        list_submit = self.paginate_data(request, list_submit.values(*fields).order_by(order_fields))
+
         list_submit["results"] = SubmissionPassListSerializer(
             list_submit["results"], many=True).data
         return self.success(data=list_submit)
@@ -405,9 +416,8 @@ class SubmissionLike(APIView):
 
         _, created = Likes.objects.update_or_create(**filter_fields, defaults=defaults)
 
-        if (created and req_body['like'] > 0) or (not created and req_body['like'] > 0 and req_body['dislike'] < 0):
+        if created and req_body['like'] > 0:
             # 如果当前用户第一次操作，且为点赞,代表第一点赞
-            # 当前用户曾经操作过，这是是点菜之后，再点赞
             # 排除不断重复点赞情况
             mes_data = (
                 req_body['user_id'],
