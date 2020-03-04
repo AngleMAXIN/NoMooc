@@ -717,7 +717,7 @@ class UserChangePasswordAPI(APIView):
 class UserFindPasswordUserCheckAPI(APIView):
 
     def post(self, request):
-        if request.user.is_authenticated():
+        if request.session.get("_auth_user_id"):
             return self.error("用户已经登录,请退出登录状态")
 
         val_list = ["email", "phone"]

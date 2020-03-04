@@ -140,7 +140,10 @@ class ProblemAPI(APIView):
 
             # 搜索的情况
             if keyword:
-                problems = problems.filter(title__icontains=keyword)
+                if keyword.isdigit():
+                    problems = problems.filter(_id=keyword)
+                else:
+                    problems = problems.filter(title__icontains=keyword)
 
             # 难度筛选
             if difficulty:

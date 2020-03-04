@@ -56,5 +56,5 @@ def clean_test_submission():
         curr_max_test_sub_id = TestSubmission.objects.all().aggregate(Max("id"))
         cache.set(CacheKey.options_last_test_sub_id, curr_max_test_sub_id, timeout=3600*36)
 
-    raws = TestSubmission.objects.filter(id__gt=curr_max_test_sub_id).update(info={}, statistic_info={}, code='')
+    raws = TestSubmission.objects.filter(id__gt=curr_max_test_sub_id.decode()).update(info={}, statistic_info={}, code='')
     print("clean up test submission statistic_info and info fields, count:", raws)

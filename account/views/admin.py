@@ -174,7 +174,8 @@ class UserAdminAPI(APIView):
         # 支持模糊查询
         if keyword:
             user = user.filter(Q(user_id__icontains=keyword) |
-                               Q(userprofile__real_name__icontains=keyword))
+                               Q(userprofile__real_name__icontains=keyword) |
+                               Q(email__icontains=keyword))
 
         status = request.GET.get("status", None)
         # 用户状态
