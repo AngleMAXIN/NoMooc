@@ -311,7 +311,7 @@ class ContestRankDownloadAPI(APIView):
         contest_id = request.GET.get("contest_id")
         contest_title = Contest.objects.filter(id=contest_id).values_list("display_id", flat=True)
         file_name = f"contest_{contest_title[0]}_rank"
-        file_path = f"/data/backend/contest_rank_file/{file_name}.xlsx"
+        file_path = f"/data/contest_rank_file/{file_name}.xlsx"
         workbook = xlsxwriter.Workbook(file_path)
         worksheet = workbook.add_worksheet()
         worksheet.set_column('A:F', 25)
@@ -337,7 +337,7 @@ class ContestRankDownloadAPI(APIView):
 
         f = open(file_path, "rb")
         response = FileResponse(f)
-        response["Content-Disposition"] = f"attachment; filename={'你好的'}.xlsx"
+        response["Content-Disposition"] = f"attachment; filename={file_name}.xlsx"
         response["Content-Type"] = "application/xlsx"
         response["Content-Length"] = os.path.getsize(file_path)
         return response
