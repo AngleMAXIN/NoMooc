@@ -5,7 +5,7 @@ ENV OJ_ENV production
 ADD . /app
 WORKDIR /app
 
-HEALTHCHECK --interval=5s --retries=3 CMD python2 /app/deploy/health_check.py
+HEALTHCHECK --interval=5s --retries=6 CMD python2 /app/deploy/health_check.py
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && apk update
 
