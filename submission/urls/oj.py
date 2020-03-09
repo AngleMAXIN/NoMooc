@@ -44,5 +44,5 @@ urlpatterns = [
     url(r"^problem-passed-submit-list/?$", ProblemPassedSubmitListAPI.as_view(),name="problem_passed_submit_list_api"),
 
     # 点赞或点踩
-    url(r"^like-submit/?$", SubmissionLike.as_view(),name="like_Submit_api")
+    url(r"^like_submit/?$", SubmissionLike.as_view(),name="like_Submit_api")
 ]
