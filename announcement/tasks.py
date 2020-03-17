@@ -17,14 +17,14 @@ def create_notify(make_data):
 
     content['creater'] = real_name
     content['title'] = make_data[1]
-    times = Contest.objects.values_list("start_time", "end_time").filter(pk=make_data[2])
+    times = Contest.objects.values_list("start_time", "end_time").filter(pk=make_data[2])[0]
     content['start_time'] = times[0]
     content['end_time'] = times[1]
     content['scenes'] = ContestScenes.get_type(str_num=int(make_data[4]))
 
     mes = Message.objects.create(content=content, writer_id=uid)
     if mes:
-        notify_user(make_data[-1], mes.id)
+        notify_user(make_data[2], mes.id)
 
 
 def notify_user(contest_id, mes_id):

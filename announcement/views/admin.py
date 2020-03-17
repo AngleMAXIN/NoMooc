@@ -23,7 +23,6 @@ class MessagePush(APIView):
             contest.title,
             contest.id,
             contest.scenes,
-            contest.id,
         )
         create_notify.delay(make_data)
         return self.success()
