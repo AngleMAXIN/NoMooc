@@ -359,10 +359,13 @@ class ProblemAPI(APIView):
         visible = data.get("visible")
         if visible is not None:
             if visible:
-                test_cases = Problem.objects.filter(pk=problem_id).values_list("test_cases", "samples")
+                test_cases = Problem.objects.filter(pk=problem_id).values_list("test_cases", "samples","difficulty")
                 test_cases = test_cases[0]
                 if self.check_test_case_null(test_cases[0]) or self.check_test_case_null(test_cases[1]):
                     return self.error("不能将没有测试用例或样例用例的试题公开")
+                if test_cases[-1] == ProblemDifficulty.Unknown:
+                    return self.error("试题难度不能为待定")
+
             r = Problem.objects.filter(
                 pk=problem_id).update(
                 visible=visible)
@@ -493,8 +496,11 @@ class AddContestProblemAPI(APIView):
             if not pro.exists():
                 res['failed'] += 1
                 continue
-
             pro = pro[0]
+            if not pro['test_cases'] or not pro['samples']:
+                return self.error("试题:{} 测试用例为空".format(pro['_id']))
+            if pro['diffculty'] == Difficulty.Unknown:
+                return self.error("难度不能为待定")
             pro.pop("old_pro_id", None)
             pro.pop("old_pro_dis_id", None)
             pro.pop("call_count", None)
