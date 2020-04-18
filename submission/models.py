@@ -56,6 +56,7 @@ class Submission(models.Model):
     code = models.TextField(verbose_name="提交代码")
     like = models.PositiveIntegerField(default=0, verbose_name="点赞数")
     dislike = models.PositiveIntegerField(default=0, verbose_name="点踩数")
+    view_count = models.PositiveIntegerField(default=0, verbose_name="浏览量")
 
     def check_user_permission(self, user, check_share=True):
         return self.user_id == user.id or \
