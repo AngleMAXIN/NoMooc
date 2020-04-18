@@ -93,7 +93,7 @@ def check_contest_permission(check_type="details"):
                 return self.error("用户未登录")
 
             self.contest_id = request.GET.get("contest_id") or request.data.get("contest_id")
-            if not self.contest_id:
+            if self.contest_id is None:
                 return self.error("参数错误, contest_id是必须的.")
 
             try:
