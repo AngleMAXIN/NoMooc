@@ -7,7 +7,7 @@ class BugSubmitSerializer(serializers.ModelSerializer):
     bug_type = serializers.CharField(max_length=30, allow_blank=True, required=False)
     bug_contest = serializers.CharField(max_length=225, allow_blank=True, required=False)
     bug_location = serializers.CharField(max_length=65, allow_blank=True, required=False)
-    bug_uid = serializers.IntegerField(allow_null=True,required=False)
+    bug_uid = serializers.IntegerField(allow_null=True, required=False)
     bug_error_api = serializers.CharField(max_length=225,required=False)
     bug_finder = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 

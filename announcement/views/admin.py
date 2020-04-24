@@ -87,4 +87,3 @@ class AnnouncementAdminAPI(APIView):
 
         self.flush_cacke()
         return self.success()
-

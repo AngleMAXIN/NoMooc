@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.conf import settings
-from account.models import User,AdminType
+from account.models import User, AdminType
 from contest.models import Contest
 from judge.dispatcher import process_pending_task
 from judge.languages import languages, spj_languages

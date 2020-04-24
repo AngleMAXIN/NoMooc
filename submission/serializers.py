@@ -8,14 +8,14 @@ class CreateSampleSerializer(serializers.Serializer):
                                   allow_blank=True,
                                   max_length=128,
                                   trim_whitespace=False,
-                                  error_messages={"max_length":"输入用例长度不能超过 128"},
+                                  error_messages={"max_length": "输入用例长度不能超过 128"},
                                   required=False)
     output = serializers.CharField(
         allow_blank=True,
         allow_null=True,
         max_length=128,
         trim_whitespace=False,
-        error_messages={"max_length":"输出用例长度不能超过 128"},
+        error_messages={"max_length": "输出用例长度不能超过 128"},
         required=False)
 
 
