@@ -72,7 +72,7 @@ class ContestAPI(APIView):
         for ip_range in data["allowed_ip_ranges"]:
             try:
                 ip_network(ip_range + "/24", strict=False)
-            except ValueError as e:
+            except ValueError:
                 return self.error(f"{ip_range} 不是一个合格的IP格式")
         if not data.get("real_time_rank"):
             cache_key = f"{CacheKey.contest_rank_cache}:{contest.id}"

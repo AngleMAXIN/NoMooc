@@ -1,5 +1,3 @@
-import json
-
 from django.db.models import Count, Max, F
 from django.db.utils import IntegrityError
 

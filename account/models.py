@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
-from django.utils.timezone import now
 
 from options.options import OptionDefaultValue
 from utils.models import MyCharField, MyJSONField

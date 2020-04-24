@@ -84,7 +84,7 @@ class SubmissionBlockList(APIView):
             "user_id",
             "contest_id",
         )
-        set_submit = Submission.objects.filter(result__in=(JudgeStatus.PENDING,JudgeStatus.JUDGING)).values(*fields)
+        set_submit = Submission.objects.filter(result__in=(JudgeStatus.PENDING, JudgeStatus.JUDGING)).values(*fields)
         data = self.paginate_data(request, set_submit)
         data["results"] = SubmissionListSerializer(
             data["results"], many=True).data

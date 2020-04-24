@@ -29,3 +29,4 @@ supervisord_local.conf
 celerybeat.pid
 celerybeat-schedule
 .svn
+.coverage
