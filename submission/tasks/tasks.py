@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 from django.db.models import F
 from oj.celery import app
-from submission.models import Submission
+from submission.models import Submission, Likes
 
 
 @app.task
