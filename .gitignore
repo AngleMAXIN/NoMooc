@@ -3,10 +3,7 @@ __pycache__/
 .idea/
 
 
-*.py[cod]
-*.log
-*.xml
-*.jpg
+
 .flake8
 .converagerc
 
@@ -30,3 +27,8 @@ celerybeat.pid
 celerybeat-schedule
 .svn
 .coverage
+*.py[cod]
+*.log
+*.xml
+*.jpg
+venv/
