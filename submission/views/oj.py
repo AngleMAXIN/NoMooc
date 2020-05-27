@@ -8,7 +8,7 @@ from contest.models import Contest, ContestPartner
 from judge.tasks import judge_task
 from problem.models import Problem, ContestProblem
 from submission.models import Submission, TestSubmission, JudgeStatus
-from submission.tasks import increase_submit_view_count, liked_status
+from submission.tasks import increase_submit_view_count
 from utils.api import APIView, validate_serializer
 from utils.cache import cache
 from utils.constants import ContestStatus, CacheKey
@@ -275,7 +275,7 @@ class SubmissionOneDisplay(APIView):
         if uid != sub_one['user_id'] and request.session.get("_u_type") == "Student":
             return self.error("对不起,你没有查看此次提交的权限")
             
-        liked_status.delay(uid, sub_one)
+        # liked_status.delay(uid, sub_one)
         increase_submit_view_count.delay(sub_one["id"])
         return self.success(data=sub_one)
 
