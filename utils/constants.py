@@ -67,3 +67,6 @@ class ProblemFromType:
     TeacherMaterial = "TEACHER_BANK"
 
 
+ArticleTypeChoice = (
+    ('NORMAL', 1),
+)

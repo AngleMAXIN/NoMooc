@@ -3,6 +3,7 @@
 from django.contrib.sessions.backends.cache import SessionStore
 from django.conf import settings
 
+
 class SessionStore(SessionStore):
     """
     自定义Session引擎，为修改session_cache_key

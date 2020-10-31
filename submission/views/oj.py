@@ -274,7 +274,7 @@ class SubmissionOneDisplay(APIView):
         sub_one = sub_one[0]
         if uid != sub_one['user_id'] and request.session.get("_u_type") == "Student":
             return self.error("对不起,你没有查看此次提交的权限")
-            
+
         # liked_status.delay(uid, sub_one)
         increase_submit_view_count.delay(sub_one["id"])
         return self.success(data=sub_one)
@@ -350,7 +350,8 @@ class ProblemPassedSubmitListAPI(APIView):
         cache_key = f"{CacheKey.problems_pass_submit}:{pro_id}"
         list_submit = cache.get(cache_key)
         if not list_submit:
-            list_submit = Submission.objects.filter(problem_id=pro_id, contest__isnull=True, result=JudgeStatus.ACCEPTED)
+            list_submit = Submission.objects.filter(problem_id=pro_id, contest__isnull=True,
+                                                    result=JudgeStatus.ACCEPTED)
             cache.set(cache_key, list_submit, timeout=3600)
 
         if submit_by:

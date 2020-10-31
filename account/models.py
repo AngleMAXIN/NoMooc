@@ -8,19 +8,19 @@ from utils.shortcuts import default_username, default_user_id
 
 
 class AdminType(object):
-    # Student
+    # 学生
     Student = "Regular User"
 
-    # Helper
+    # 助教
     Helper = "Helper"
 
-    # Teacher
+    # 教师
     Teacher = "Teacher"
 
-    # Admin
+    # 管理员
     Admin = "Admin"
 
-    # Super Admin
+    # 超级管理员
     SUPER_ADMIN = "Super Admin"
 
 

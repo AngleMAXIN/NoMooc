@@ -2,7 +2,9 @@
 # -*- coding:utf-8 -*-
 import demjson
 from django.core.management import BaseCommand
+
 from problem.models import Problem
+
 
 class Command(BaseCommand):
     help = "插入院系及专业信息"
@@ -39,10 +41,9 @@ class Command(BaseCommand):
             #     print("-----------------------",e)
             #
             #     pass
-        # res is str
+            # res is str
             res = "<br>------------------------------------------------------<br><br><br>".join(res_list)
         return res
-
 
     def start(self):
         self._get_pro_answe()

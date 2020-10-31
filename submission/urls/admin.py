@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
+from ..views.admin import SubmissionListAPI, SubmissionRejudgeAPI, SubmissionBlockList
 from ..views.oj import SubmissionListAPI as ConSubmissionListAPI
-from ..views.admin import SubmissionListAPI, SubmissionRejudgeAPI,SubmissionBlockList
 
 urlpatterns = [
     url(r"^submission-rejudge/?$", SubmissionRejudgeAPI.as_view(), name="submission_rejudge_api"),

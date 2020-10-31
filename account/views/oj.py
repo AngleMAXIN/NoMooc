@@ -46,7 +46,7 @@ class UserDoProblemStatus(APIView):
 
         # 尝试过失败的题目数
         user_problems_status["try"] = have_do - \
-            user_problems_status["accepted_number"]
+                                      user_problems_status["accepted_number"]
 
         public_pro_count = cache.get(CacheKey.public_pro_count)
         if not public_pro_count:
@@ -108,7 +108,6 @@ class UserProfileAPI(APIView):
                         pk=in_contest_id[0]).values_list(
                         "scenes", flat=True)
                     user_info['contest_scenes'] = contest_type[0]
-                cache.zset()
                 cache.set(cache_key, user_info, timeout=1900)
             else:
                 user_info['cached'] = True
@@ -285,7 +284,7 @@ class UserSendCaptchaAPI(APIView):
         "find_passwd": (
             "find_password.html",
             "找回密码",
-            CacheKey.find_password, ),
+            CacheKey.find_password,),
     }
 
     def _check_duplicate(self, account, option):
@@ -304,7 +303,7 @@ class UserSendCaptchaAPI(APIView):
 
         option = request.data.get("option")
         if option == "find_passwd":
-            cache_cookie_key = f'{CacheKey.find_password}:{request.META.get("HTTP_X_REAL_IP","")}'
+            cache_cookie_key = f'{CacheKey.find_password}:{request.META.get("HTTP_X_REAL_IP", "")}'
             if request.COOKIES.get(
                     CacheKey.find_password) != cache.get(cache_cookie_key):
                 # return self.error("参数错误")
@@ -357,7 +356,7 @@ class UserSendCaptchaAPI(APIView):
 
 class UserFindPassWdCaptcha(APIView):
     def post(self, request):
-        cache_cookie_key = f'{CacheKey.find_password}:{request.META.get("HTTP_X_REAL_IP","")}'
+        cache_cookie_key = f'{CacheKey.find_password}:{request.META.get("HTTP_X_REAL_IP", "")}'
         if request.COOKIES.get(
                 CacheKey.find_password) != cache.get(cache_cookie_key):
             return self.error("参数错误")
@@ -426,7 +425,7 @@ class UserAuthenticateAPI(APIView):
         if user_type == 1:
             if not decrypt_info[2].isdigit() or len(
                     decrypt_info[2]) > 15 or len(
-                    decrypt_info[2]) < 8:
+                decrypt_info[2]) < 8:
                 return "编号格式错误"
 
         user_is_auth = User.objects.filter(
@@ -682,7 +681,6 @@ class UserOtherAuthenticateAPI(APIView):
         return self.success()
 
 
-
 class UserChangePasswordAPI(APIView):
     def post(self, request):
         """
@@ -773,7 +771,7 @@ class ResetPasswordAPI(APIView):
         data = m_decrypt(
             (data['user_id'],
              data['old_password'],
-                data['new_password'],
+             data['new_password'],
              ))
         try:
             user = User.objects.get(user_id=data[0])
@@ -830,7 +828,7 @@ class UserRankAPI(APIView):
             data = cache.get(cache_key)
             if not data:
                 data = self.get_user_rank(request)
-                cache.set(cache_key, data, timeout=60*15)
+                cache.set(cache_key, data, timeout=60 * 15)
         else:
             data = self.get_user_rank(request, real_name)
         return self.success(data)
@@ -946,7 +944,7 @@ class UserContestThroughAuth(APIView):
             user_id=uid, contest_id=con_id).update(is_auth=True)
 
         if raw < 1:
-            Contest.objects.filter(id=con_id).update(s_number=F("s_number")+1)
+            Contest.objects.filter(id=con_id).update(s_number=F("s_number") + 1)
             ContestPartner.objects.create(
                 user_id=uid, contest_id=con_id, is_auth=True)
         return self.success()

@@ -4,6 +4,8 @@ from utils.shortcuts import get_env
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+DEBUG = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -13,6 +15,10 @@ DATABASES = {
         'USER': "root",
         'PASSWORD': "maxinz",
         'CHARSET': 'utf8',
+        'TEST': {
+            'CHARSET': 'utf8',
+            'COLLATION': 'utf8_general_ci',
+        },
     }
 }
 
@@ -28,7 +34,6 @@ RABBIT_MQ_CONF = {
     "PORT": get_env("RABBIT_MQ_PORT", "5672")
 }
 
-DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 

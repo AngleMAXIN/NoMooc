@@ -39,7 +39,7 @@ class login_required(BasePermissionDecorator):
     """
 
     def check_permission(self):
-        return self.request.session.get("_auth_user_id")
+        return self.request.user.is_authenticated
 
 
 class super_admin_required(BasePermissionDecorator):

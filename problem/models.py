@@ -2,8 +2,8 @@ from django.db import models
 
 from account.models import User
 from contest.models import Contest
-from utils.models import MyRichTextField, MyJSONField, MyCharField
 from utils.constants import Choices
+from utils.models import MyRichTextField, MyJSONField, MyCharField
 
 
 class ProblemTag(models.Model):
@@ -96,14 +96,12 @@ class AbstractProblem(models.Model):
 
 
 class Problem(AbstractProblem):
-
     tags = models.ManyToManyField(ProblemTag, verbose_name="标签", default="")
     old_pro_id = models.IntegerField(default=0, verbose_name="公有题库试题id")
     old_pro_dis_id = models.IntegerField(default=0, verbose_name="公有题库试题_id")
     call_count = models.PositiveIntegerField(default=0, verbose_name="被竞赛引用次数")
 
     class Meta:
-
         db_table = "problem"
 
 
