@@ -108,7 +108,6 @@ class UserProfileAPI(APIView):
                         pk=in_contest_id[0]).values_list(
                         "scenes", flat=True)
                     user_info['contest_scenes'] = contest_type[0]
-                cache.zset()
                 cache.set(cache_key, user_info, timeout=1900)
             else:
                 user_info['cached'] = True
@@ -225,7 +224,7 @@ class UserLoginAPI(APIView):
 
                 user_session_keys = request.user.session_keys
                 m_session = request.session.session_key
-                save_record_and_deal_repeat_login.delay(
+                save_record_and_deal_repeat_login(
                     uid=user.id,
                     user_session_keys=user_session_keys,
                     m_session=m_session)
