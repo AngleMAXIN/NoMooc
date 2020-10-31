@@ -49,7 +49,7 @@ class UserManager(models.Manager):
 class User(AbstractBaseUser):
     objects = UserManager()
 
-    sex = MyCharField(max_length=3, default=u"保密", verbose_name="性别")
+    sex = MyCharField(max_length=3, default="保密", verbose_name="性别")
     username = models.CharField(
         max_length=50,
         default=default_username,

@@ -3,11 +3,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
+
 import utils.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('submission', '0002_testsubmission_user_id'),
     ]

@@ -36,6 +36,4 @@ urlpatterns = [
 
     url(r"^event-fresh/?$", ContestEventFreshAPI.as_view(), name="contest_of_language"),
 
-
 ]
-

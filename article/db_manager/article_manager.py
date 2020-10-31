@@ -19,15 +19,16 @@ def get_article_by_id_db(article_id):
         return None
 
 
-FORMAT_DATE_WITHOUT_SEPARATOR = u'%Y%m%d'
-FORMAT_DATETIME_WITHOUT_SEPARATOR = u'%Y%m%d%H%M%S'
-FORMAT_DATE = u'%Y-%m-%d'
-FORMAT_MONTH = u'%Y-%m'
-FORMAT_YEAR = u'%Y'
-
+# FORMAT_DATE_WITHOUT_SEPARATOR = u'%Y%m%d'
+# FORMAT_DATETIME_WITHOUT_SEPARATOR = u'%Y%m%d%H%M%S'
+# FORMAT_DATE = u'%Y-%m-%d'
+# FORMAT_MONTH = u'%Y-%m'
+# FORMAT_YEAR = u'%Y'
+#
 FORMAT_DATETIME = u'%Y-%m-%d %H:%M:%S'
-FORMAT_DATETIME_MSEC = u'%Y-%m-%d %H:%M:%S.%f'
-FORMAT_HOUR_MIN = u'%H:%M'
+# FORMAT_DATETIME_MSEC = u'%Y-%m-%d %H:%M:%S.%f'
+# FORMAT_HOUR_MIN = u'%H:%M'
+
 
 def datetime_to_str(date, date_format=FORMAT_DATETIME, process_none=False):
     """
@@ -36,6 +37,7 @@ def datetime_to_str(date, date_format=FORMAT_DATETIME, process_none=False):
     if process_none and date is None:
         return ''
     return date.strftime(date_format)
+
 
 def build_article_detail_info(article):
 

@@ -1,8 +1,10 @@
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from .models import User
 from django.db.models import Q
+
+from .models import User
+
 
 class CustomBackend(object):
     def authenticate(self, request, **credentials):

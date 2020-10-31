@@ -201,7 +201,7 @@ class ContestOfUserJoin(APIView):
                 contest__start_time__gt=now_time) | Q(
                 contest__start_time__lt=now_time,
                 contest__end_time__gt=now_time)).values(
-                    *fieldsets).order_by("-last_time")
+            *fieldsets).order_by("-last_time")
 
         data = self.paginate_data(
             request,

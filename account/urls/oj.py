@@ -46,7 +46,7 @@ urlpatterns = [
     # 实时获取的用户相关信息
     url(r"^profile/?$", UserProfileAPI.as_view(), name="user_profile_api"),
     # 关于用户做题情况的统计
-    url(r"^userDoProblemsStatus", UserDoProblemStatus.as_view(),name="user_do_problems_status_api"),
+    url(r"^userDoProblemsStatus", UserDoProblemStatus.as_view(), name="user_do_problems_status_api"),
     # 上传头像
     url(r"^upload_avatar/?$", AvatarUploadAPI.as_view(), name="avatar_upload_api"),
     # 用户认证
@@ -64,11 +64,10 @@ urlpatterns = [
     # 用户竞赛认证第二部，图像认证
     # url(r"^user_contest_pirc_auth/?$", UserContestPircAuth.as_view(),name="user_contest_pirc_auth_api"),
     #  用户竞赛认证第三步，通过认证
-    url(r"^user_contest_pass_auth/?$", UserContestThroughAuth.as_view(),name="user_contest_pass_auth"),
+    url(r"^user_contest_pass_auth/?$", UserContestThroughAuth.as_view(), name="user_contest_pass_auth"),
     # 更新用户竞赛参加状态
     url(r"^user-contest-join/?$", UserContestCanStatus.as_view(), name="user_contest_pass_auth"),
     # 获得用户Rank时的信息
     url(r"^user-rank-info-card/?$", UserRankProfileCard.as_view(), name="user_rank_profile_card"),
 
 ]
-

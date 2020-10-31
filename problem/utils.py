@@ -1,5 +1,5 @@
 import re
-from problem.models import Problem
+
 TEMPLATE_BASE = """{}
 
 //write code start here
@@ -21,6 +21,3 @@ def parse_problem_template(template_str):
 
 def build_problem_template(prepend, append):
     return TEMPLATE_BASE.format(prepend, append)
-
-
-

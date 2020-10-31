@@ -26,7 +26,7 @@ class ArticleAPI(APIView):
         return self.success(data=article_info)
 
     @validate_serializer(CreateArticleSerializer)
-    # @login_required
+    @login_required
     def post(self, request):
         """
         创建文章
