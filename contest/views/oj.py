@@ -196,12 +196,7 @@ class ContestOfUserJoin(APIView):
         )
         now_time = now()
         contests = ContestPartner.objects.select_related("contest").filter(
-            user_id=uid, contest__is_contest=True, contest__visible=True).filter(
-            Q(
-                contest__start_time__gt=now_time) | Q(
-                contest__start_time__lt=now_time,
-                contest__end_time__gt=now_time)).values(
-                    *fieldsets).order_by("-last_time")
+            user_id=uid, contest__is_contest=True, contest__visible=True).values(*fieldsets).order_by("-last_time")
 
         data = self.paginate_data(
             request,

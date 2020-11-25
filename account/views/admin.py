@@ -281,15 +281,17 @@ class UserBatchImport(APIView):
             successItem=list())
 
         for user_id_name in user_list:
-            if len(user_id_name[0]) + len(user_id_name[1]) < 4:
+            user_id_str = str(int(user_id_name[1]))
+            print(user_id_name)
+            if len(user_id_name[0]) + len(user_id_str) < 4:
                 generate_res['failedItem'].append(user_id_name)
                 continue
             try:
                 u = User.objects.create(
-                    user_id=user_id_name[1],
+                    user_id=user_id_str,
                     admin_type=user_type,
                     password=make_password(
-                        user_id_name[1]),
+                        user_id_str),
                     register_type=UserRegisterType.FACTORY)
 
                 UserProfile.objects.create(user=u, real_name=user_id_name[0])

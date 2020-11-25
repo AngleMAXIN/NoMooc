@@ -693,7 +693,7 @@ class UserChangePasswordAPI(APIView):
         if not r:
             return self.error("解析错误")
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             input = request.COOKIES.get("email", None)
 
             if not input:

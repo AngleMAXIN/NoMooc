@@ -187,8 +187,7 @@ class JudgeServerHeartbeatAPI(CSRFExemptAPIView):
         try:
             server = JudgeServer.objects.get(hostname=data["hostname"])
             server.judger_version = data["judger_version"]
-            # server.cpu_core = data["cpu_core"]
-            server.cpu_core = 1
+            server.cpu_core = data["cpu_core"]
             server.memory_usage = data["memory"]
             server.cpu_usage = data["cpu"]
             server.service_url = data["service_url"]
