@@ -6,16 +6,16 @@ from judge.languages import language_names
 class CreateSampleSerializer(serializers.Serializer):
     input = serializers.CharField(allow_null=True,
                                   allow_blank=True,
-                                  max_length=128,
+                                  max_length=256,
                                   trim_whitespace=False,
-                                  error_messages={"max_length": "输入用例长度不能超过 128"},
+                                  error_messages={"max_length": "输入用例长度不能超过 256"},
                                   required=False)
     output = serializers.CharField(
         allow_blank=True,
         allow_null=True,
-        max_length=128,
+        max_length=256,
         trim_whitespace=False,
-        error_messages={"max_length": "输出用例长度不能超过 128"},
+        error_messages={"max_length": "输出用例长度不能超过 256"},
         required=False)
 
 
