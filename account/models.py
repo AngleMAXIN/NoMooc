@@ -124,7 +124,6 @@ class User(AbstractBaseUser):
 
     class Meta:
         db_table = "user"
-        ordering = ("-create_time",)
 
 
 class UserProfile(models.Model):

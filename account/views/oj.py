@@ -682,7 +682,6 @@ class UserOtherAuthenticateAPI(APIView):
         return self.success()
 
 
-
 class UserChangePasswordAPI(APIView):
     def post(self, request):
         """

@@ -21,10 +21,11 @@ class BasePermissionDecorator(object):
         self.request = args[1]
         uid = self.check_permission()
         if uid:
-            is_disabled = User.objects.filter(id=uid).values(
-                'is_disabled')[0].get('is_disabled')
-            if is_disabled:
+            user = User.objects.filter(id=uid).values_list('is_disabled', flat=True)
+            if user and user[0]:
                 return self.error("你的账户已被禁用,请联系管理员")
+            # 登录用户，设置uid
+            self.request.uid = uid
             return self.func(*args, **kwargs)
         else:
             return self.error("用户状态或身份异常，请确认是否登录以及当前用户身份")

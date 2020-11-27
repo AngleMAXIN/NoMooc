@@ -118,7 +118,7 @@ class ProblemAPI(APIView):
             if not data:
                 problems = Problem.objects.filter(
                     bank=1,
-                    visible=True).prefetch_related("tags").order_by("id")
+                    visible=True).prefetch_related("tags").order_by("-_id")
 
                 data = self.paginate_data(request, problems, ProblemSerializer)
 
