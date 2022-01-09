@@ -1,6 +1,6 @@
-from .models import Submission
-from utils.api import serializers
 from judge.languages import language_names
+from utils.api import serializers
+from .models import Submission
 
 
 class CreateSampleSerializer(serializers.Serializer):

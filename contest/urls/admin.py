@@ -27,7 +27,7 @@ urlpatterns = [
 
     url(r"^grade-contest/?$", UserOfGradeOfContestList.as_view(), name="grade_contest_api"),
 
-    url(r"^contest-id-list/?$", ContestIdListOfCreater.as_view(),name="contest_id_list_api"),
+    url(r"^contest-id-list/?$", ContestIdListOfCreater.as_view(), name="contest_id_list_api"),
 
     url(r"^contest-rank-download/?$", ContestRankDownloadAPI.as_view(), name="contest_rank_api"),
 ]

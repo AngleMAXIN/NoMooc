@@ -315,7 +315,7 @@ class ContestRankDownloadAPI(APIView):
         workbook = xlsxwriter.Workbook(file_path)
         worksheet = workbook.add_worksheet()
         worksheet.set_column('A:F', 25)
-        workbook.add_format({ 'fg_color': '#F4B084'})
+        workbook.add_format({'fg_color': '#F4B084'})
         worksheet.write("A1", "排名")
         worksheet.write("B1", "学号")
         worksheet.write("C1", "姓名")

@@ -70,9 +70,9 @@ class Contest(models.Model):
     # 是否有权查看problem 的一些统计信息 诸如submission_number, accepted_number 等
     def problem_details_permission(self, user):
         return self.rule_type == ContestRuleType.ACM or \
-            self.status == ContestStatus.CONTEST_ENDED or \
-            self.real_time_rank or \
-            user.is_contest_admin(self)
+               self.status == ContestStatus.CONTEST_ENDED or \
+               self.real_time_rank or \
+               user.is_contest_admin(self)
 
     class Meta:
         db_table = "contest"

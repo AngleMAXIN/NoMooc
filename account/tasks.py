@@ -58,4 +58,3 @@ def create_notify(make_data):
         UserMessage.objects.create(uid=make_data[0], message_id=mes.id)
 
         cache.hincrby(CacheKey.notify_message, make_data[0], amount=1)
-

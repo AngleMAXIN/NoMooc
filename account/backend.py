@@ -1,11 +1,12 @@
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from .models import User
 from django.db.models import Q
 
-class CustomBackend(object):
+from .models import User
 
+
+class CustomBackend(object):
     def authenticate(self, request, **credentials):
         # 要注意登录表单中用户输入的用户名或者邮箱的 field 名均为 username
         login_user = credentials.get('username')

@@ -359,7 +359,7 @@ class ProblemAPI(APIView):
         visible = data.get("visible")
         if visible is not None:
             if visible:
-                test_cases = Problem.objects.filter(pk=problem_id).values_list("test_cases", "samples","difficulty")
+                test_cases = Problem.objects.filter(pk=problem_id).values_list("test_cases", "samples", "difficulty")
                 test_cases = test_cases[0]
                 if self.check_test_case_null(test_cases[0]) or self.check_test_case_null(test_cases[1]):
                     return self.error("不能将没有测试用例或样例用例的试题公开")

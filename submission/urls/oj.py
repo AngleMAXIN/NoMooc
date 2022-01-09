@@ -41,8 +41,8 @@ urlpatterns = [
     url(r"^user-submission-statistics/?$", UserSubmitStatisticsAPI.as_view(), name="user_submission_statistics_api"),
 
     # 试题已通过提交列表
-    url(r"^problem-passed-submit-list/?$", ProblemPassedSubmitListAPI.as_view(),name="problem_passed_submit_list_api"),
+    url(r"^problem-passed-submit-list/?$", ProblemPassedSubmitListAPI.as_view(), name="problem_passed_submit_list_api"),
 
     # 点赞或点踩
-    url(r"^like_submit/?$", SubmissionLike.as_view(),name="like_Submit_api")
+    url(r"^like_submit/?$", SubmissionLike.as_view(), name="like_Submit_api")
 ]

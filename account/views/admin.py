@@ -725,7 +725,7 @@ class UserAdminOperationRecord(APIView):
         list_record = AdminOperationRecord.objects.raw(query, params=[offset, limit + offset], translations="")
         data = {
             "total": AdminOperationRecord.objects.count(),
-            "results": AdminOperationRecordSerializers(list_record,many=True).data,
+            "results": AdminOperationRecordSerializers(list_record, many=True).data,
         }
         # res = ""
         # res = self.paginate_data(request, list_record, AdminOperationRecordSerializers)

@@ -23,7 +23,7 @@ class ProblemTagAPI(APIView):
                 problem_count=Count("problem"))
             data = TagSerializer(tags, many=True).data
 
-            cache.set(cache_key, data, timeout=60*15)
+            cache.set(cache_key, data, timeout=60 * 15)
         return self.success(data)
 
 
@@ -122,7 +122,7 @@ class ProblemAPI(APIView):
 
                 data = self.paginate_data(request, problems, ProblemSerializer)
 
-                cache.set(cache_key, data, timeout=60*10)
+                cache.set(cache_key, data, timeout=60 * 10)
 
         else:
             # 不能缓存

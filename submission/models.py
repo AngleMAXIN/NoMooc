@@ -60,9 +60,9 @@ class Submission(models.Model):
 
     def check_user_permission(self, user, check_share=True):
         return self.user_id == user.id or \
-            (check_share and self.shared is True) or \
-            user.is_super_admin() or \
-            user.can_mgmt_all_problem()
+               (check_share and self.shared is True) or \
+               user.is_super_admin() or \
+               user.can_mgmt_all_problem()
 
     class Meta:
         db_table = "submission"
@@ -93,4 +93,3 @@ class TestSubmission(models.Model):
 
     class Meta:
         db_table = "test_submission"
-

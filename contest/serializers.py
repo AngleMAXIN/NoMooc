@@ -124,7 +124,6 @@ class ContestOfUsersSerializer(serializers.Serializer):
     user__userprofile__class_id = serializers.IntegerField()
 
 
-
 class ContestAnnouncementSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     content = serializers.CharField()
@@ -136,10 +135,10 @@ class CreateContestAnnouncementSerializer(serializers.Serializer):
 
 
 class ACMContestRankSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ACMContestRank
         fields = "__all__"
+
 
 class ContestTimeSerializer(serializers.Serializer):
     start_time = serializers.DateTimeField()
@@ -149,6 +148,7 @@ class ContestTimeSerializer(serializers.Serializer):
 
 class ContestOfGrade(serializers.Serializer):
     contest_id = serializers.IntegerField()
+
 
 class ContestCreatorSerializer(serializers.Serializer):
     id = serializers.IntegerField()

@@ -251,4 +251,3 @@ class AdminOperationRecordSerializers(serializers.ModelSerializer):
     class Meta:
         model = AdminOperationRecord
         fields = '__all__'
-
