@@ -74,14 +74,15 @@ cd $APP
 n=0
 while [ $n -lt 5 ]
 do
-	python3.6 manage.py migrate --no-input &&
+    python3.6 manage.py makemigration &&
+	python3.6 manage.py migrate &&
 	python3.6 manage.py inituser --username=admin --password=admin123 --action=create_super_admin &&
 	echo "from options.options import SysOptions; SysOptions.judge_server_token='$JUDGE_SERVER_TOKEN'" | python manage.py shell &&
 	echo "from conf.models import JudgeServer; JudgeServer.objects.update(task_number=0)" | python manage.py shell &&
 	break
 	n=$(($n+1))
 	echo "Failed to migrate, going to retry..."
-	sleep 8
+	sleep 2
 done
 
 addgroup -g 12003 spj
