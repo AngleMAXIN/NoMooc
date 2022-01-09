@@ -13,9 +13,9 @@ class ContestScenes:
     # 练习
     PRACTICE = 0
 
-    @staticmethod
-    def get_type(str_num):
-        return "考试" if str_num > 0 else "练习"
+    @classmethod
+    def get_type(cls, scenes):
+        return "考试" if int(scenes) == cls.EXAM else "练习"
 
 
 class Contest(models.Model):

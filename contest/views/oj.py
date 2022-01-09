@@ -180,10 +180,9 @@ class ContestTime(APIView):
 
 
 class ContestOfUserJoin(APIView):
+
+    @login_required
     def get(self, request):
-        uid = request.session.get("_auth_user_id")
-        if not uid:
-            return self.error("用户未登录")
         fieldsets = (
             "contest__title",
             "contest__id",
@@ -194,7 +193,7 @@ class ContestOfUserJoin(APIView):
             "is_auth",
             "is_disabled",
         )
-        now_time = now()
+        uid = request.uid
         contests = ContestPartner.objects.select_related("contest").filter(
             user_id=uid, contest__is_contest=True, contest__visible=True).filter(
             Q(

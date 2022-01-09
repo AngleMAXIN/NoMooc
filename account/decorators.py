@@ -21,10 +21,13 @@ class BasePermissionDecorator(object):
         self.request = args[1]
         uid = self.check_permission()
         if uid:
-            is_disabled = User.objects.filter(id=uid).values(
-                'is_disabled')[0].get('is_disabled')
-            if is_disabled:
+            user = User.objects.filter(id=uid).values_list('is_disabled', flat=True)[:1]
+            if user and user[0]:
                 return self.error("你的账户已被禁用,请联系管理员")
+
+            # 登录用户，设置uid
+            setattr(self.request, 'uid', uid)
+
             return self.func(*args, **kwargs)
         else:
             return self.error("用户状态或身份异常，请确认是否登录以及当前用户身份")
@@ -49,7 +52,8 @@ class super_admin_required(BasePermissionDecorator):
 
     def check_permission(self):
         user = self.request.user
-        return user.is_authenticated() and user.is_super_admin()
+        if user.is_authenticated() and user.is_super_admin():
+            return self.request.session.get('_auth_user_id')
 
 
 class admin_role_required(BasePermissionDecorator):
@@ -57,7 +61,8 @@ class admin_role_required(BasePermissionDecorator):
 
     def check_permission(self):
         user = self.request.user
-        return user.is_admin_role()
+        if user.is_admin_role():
+            return self.request.session.get('_auth_user_id')
 
 
 class teacher_role_required(BasePermissionDecorator):
