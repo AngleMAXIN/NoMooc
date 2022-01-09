@@ -220,8 +220,8 @@ class SubmissionListAPI(APIView):
         data = {}
         if not flag:
             data['total'] = submissions.aggregate(Max("id")).get("id__max")
-            offset = int(request.GET.get("offset"))
-            limit = int(request.GET.get("limit"))
+            offset = int(request.GET.get("offset", 0))
+            limit = int(request.GET.get("limit", 0))
             page = (offset // limit) + 1
             data['results'] = submissions.filter(id__gte=(data['total'] - limit * page),
                                                  id__lte=data['total'] - offset).values(*fields)[:limit]

@@ -6,6 +6,7 @@ from account.models import UserProfile
 from announcement.models import Message, UserMessage
 from contest.models import ContestScenes, ContestPartner, Contest
 from utils.cache import cache
+from utils.common import datetime_to_str
 from utils.constants import CacheKey
 
 
@@ -33,8 +34,8 @@ def create_notify(created_by_id, contest_title, contest_id, contest_scenes):
     content = {
         'creater': real_name,
         'title': contest_title,
-        'start_time': start_time,
-        'end_time': end_time,
+        'start_time': datetime_to_str(start_time),
+        'end_time': datetime_to_str(end_time),
         'scenes': ContestScenes.get_type(scenes=contest_scenes)
     }
 
