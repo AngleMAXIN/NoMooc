@@ -143,10 +143,10 @@ class JudgeDispatcher(DispatcherBase):
 
     def _compute_statistic_info(self, resp_data):
         # 用时和内存占用保存为多个测试点中最长的那个
-        self.submission.statistic_info["time_cost"] = max(
-            [x.get("cpu_time") for x in resp_data])
-        self.submission.statistic_info["memory_cost"] = max(
-            [x.get("memory") for x in resp_data])
+        cpu_time_list = [x["cpu_time"] for x in resp_data]
+        self.submission.statistic_info["time_cost"] = max(cpu_time_list) if cpu_time_list else 0
+        memory_list = [x["memory"] for x in resp_data]
+        self.submission.statistic_info["memory_cost"] = max(memory_list) if memory_list else 0
 
     def judge(self):
         server = self.choose_judge_server()
